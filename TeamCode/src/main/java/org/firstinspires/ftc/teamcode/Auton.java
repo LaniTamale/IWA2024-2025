@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Auton extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
-    // Method to strafe right autonomously
+    // Method to strafe right autonomously "original emergency park"
     public void strafeRightAuto(Robot robot){
         robot.driveToPosition(48, 0, 0.2, telemetry);
     }
@@ -35,31 +35,42 @@ public class Auton extends LinearOpMode {
         Robot robot = new Robot(hardwareMap);
 
         // Wait for the start signal
+        telemetry.addData("Status", "Waiting for start");
+        telemetry.update();
         waitForStart();
         runtime.reset();
 
         if (opModeIsActive()) {
-            // Step 1: Drive left (31 inches)
+
+        }
+            // Step 1: Initialize mini claw closed for pre load
+            robot.miniClawServo.setPosition(robot.miniClawClosePos);
+
+            // Step 2: Raise the front slide to max height and operate mini claw
+            telemetry.addData("Step", "Raising front slide and toggling claw");
+            telemetry.update();
+
+            telemetry.addData("Step", "front slide reaching high position");
+            telemetry.update();
+            robot.slideToPosition(robot.frontslide, robot.frontSlidMaxLen, 4, 0.5, true);
+
+            // Step 3: Drive left (-33 inches)
             telemetry.addData("Step", "Driving left");
             telemetry.update();
-            robot.driveToPosition(-33, 0, 0.2, telemetry);
+            robot.driveToPosition(-33, 0, 0.4, telemetry);
 
-            // Step 2: Score the preload object
-            telemetry.addData("Step", "Scoring preload");
-            telemetry.update();
-            scorePreload(robot);
-
-            // Step 3: Pause to simulate hanging the specimen
+            // Step 4:Score the preload object
             telemetry.addData("Step", "Hanging specimen");
             telemetry.update();
+            //encoder target position
             sleepWithTelemetry(2000, "Hanging on tall rung");
+            robot.miniClawServo.setPosition(robot.miniClawOpenPos);
 
             // Completion message
             telemetry.addData("Step", "Autonomous Complete");
             telemetry.update();
         }
     }
-}
 
 /*
     // Method to add a pause with telemetry feedback

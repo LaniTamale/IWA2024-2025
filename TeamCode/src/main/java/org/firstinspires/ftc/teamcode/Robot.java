@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -22,6 +23,7 @@ public class Robot {
     public boolean isMiniClawOpen;
     double cpr = 537.7; // clicks
     double wheelCirc = 11.9; // in
+    static final double frontSlideWheelCirc = Math.PI * 1.5;
 
     // limits
     final public double ArmClawOpenPos = 0.3;
@@ -29,6 +31,8 @@ public class Robot {
 
     final public double miniClawOpenPos = 0.3;
     final public double miniClawClosePos = 0.0;
+
+    final public double frontSLideMaxLen = 19; // in
 
 
     final public double wristOpenPos = 0;
@@ -86,9 +90,11 @@ public class Robot {
 
         arm.setDirection(DcMotor.Direction.FORWARD);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         armslide.setDirection(DcMotor.Direction.FORWARD);
         armslide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontslide.setDirection(DcMotor.Direction.REVERSE);
+
+        frontslide.setDirection(DcMotor.Direction.FORWARD);
         frontslide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
@@ -179,5 +185,11 @@ public class Robot {
 
             }
         }
+    }
+
+    // movement is relative; power is a float in the range [0.0, 1.0]
+    // optionally block until movement completion
+    public slideToPosition(DcMotor motor, double in, double power, boolean blockReturn) {
+        double currentPos = motor.getCurrentPosition() / cpi;
     }
 }
