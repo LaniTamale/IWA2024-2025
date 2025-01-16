@@ -18,7 +18,7 @@ public class Auton extends LinearOpMode {
     }
     // Method to score the preload object
     public void scorePreload(Robot robot){
-        robot.driveToPosition(0, 8, 0.2, telemetry);
+        robot.driveToPosition(0, 0, 0.2, telemetry);
     }
     // Method to add a pause with telemetry feedback
     private void sleepWithTelemetry(long millis, String message) {
@@ -39,26 +39,28 @@ public class Auton extends LinearOpMode {
         runtime.reset();
 
         if (opModeIsActive()) {
-            // Test case 1: Drive right (48 inches)
-            telemetry.addData("Step", "Driving right");
+            // Step 1: Drive left (31 inches)
+            telemetry.addData("Step", "Driving left");
             telemetry.update();
-            strafeRightAuto(robot);
+            robot.driveToPosition(-33, 0, 0.2, telemetry);
 
-            // Test case 2: Score preload object
+            // Step 2: Score the preload object
             telemetry.addData("Step", "Scoring preload");
             telemetry.update();
             scorePreload(robot);
 
-            // Optional: Pause to simulate hanging the specimen
+            // Step 3: Pause to simulate hanging the specimen
             telemetry.addData("Step", "Hanging specimen");
             telemetry.update();
             sleepWithTelemetry(2000, "Hanging on tall rung");
 
+            // Completion message
             telemetry.addData("Step", "Autonomous Complete");
             telemetry.update();
         }
     }
 }
+
 /*
     // Method to add a pause with telemetry feedback
     @Override
@@ -118,4 +120,4 @@ public class Auton extends LinearOpMode {
             telemetry.update();
         }
     }
-}
+}  */
