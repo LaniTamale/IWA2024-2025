@@ -81,6 +81,7 @@ public class Robot {
         frontSlide.setDirection(DcMotor.Direction.REVERSE);
         frontSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     // Move linearly from the current position to the specified relative point.
