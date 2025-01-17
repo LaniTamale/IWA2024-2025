@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import java.lang.Math;
 import static java.lang.Thread.sleep;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /*
 Contains robot build, state, and transformation functions.
@@ -24,6 +21,8 @@ public class Robot {
     double cpr = 537.7; // clicks
     double wheelCirc = 11.9; // in
     static final double frontSlideWheelCirc = Math.PI * 1.5;
+    // to correct movement lengths
+    static final double drivetrainMultiplier = 1.65;
 
     // limits
     final public double ArmClawOpenPos = 0.3;
@@ -32,11 +31,7 @@ public class Robot {
     final public double miniClawOpenPos = 0.3;
     final public double miniClawClosePos = 0.0;
 
-    final public double frontSLideMaxLen = 19; // in
-
-
-    final public double wristOpenPos = 0;
-    final public double wristClosePos = 1;
+    final public double frontSLideMaxLen = 18; // in
 
     // state
     public boolean isClawOpen = false;
@@ -44,28 +39,20 @@ public class Robot {
     public boolean rightTriggerPrev = false;
     public boolean leftBumperPrev = false;
 
-    //public boolean isWristOpen = true;
-
     // motors
     public DcMotor leftFrontDrive;
     public DcMotor rightFrontDrive;
     public DcMotor leftBackDrive;
     public DcMotor rightBackDrive;
     public DcMotor arm;
-    public DcMotor armslide;
-    public DcMotor frontslide;
+    public DcMotor armSlide;
+    public DcMotor frontSlide;
 
     //servos
     public Servo armClawServo;
     public Servo miniClawServo;
 
-    //public Servo wristServo;
-
-    // Creates a PIDFController with gains kP, kI, kD, and kF
-    //PIDFController pidf;
-
     public Robot(HardwareMap hardwareMap) {
-        //pidf = new PIDFController(kP, kI, kD, kF);
         // init hardware
         leftFrontDrive = hardwareMap.get(DcMotor.class, "frontLeft");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "frontRight");
@@ -73,14 +60,11 @@ public class Robot {
         rightBackDrive = hardwareMap.get(DcMotor.class, "backRight");
 
         arm = hardwareMap.get(DcMotor.class, "arm");
-        armslide = hardwareMap.get(DcMotor.class, "armslide");
-        frontslide = hardwareMap.get(DcMotor.class, "frontslide");
+        armSlide = hardwareMap.get(DcMotor.class, "armslide");
+        frontSlide = hardwareMap.get(DcMotor.class, "frontslide");
 
         armClawServo = hardwareMap.get(Servo.class, "armclaw");
         miniClawServo = hardwareMap.get(Servo.class, "miniclaw");
-
-
-        //wristServo = hardwareMap.get(Servo.class, "wrist");
 
         // configure
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -91,51 +75,29 @@ public class Robot {
         arm.setDirection(DcMotor.Direction.FORWARD);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        armslide.setDirection(DcMotor.Direction.FORWARD);
-        armslide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armSlide.setDirection(DcMotor.Direction.FORWARD);
+        armSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        frontslide.setDirection(DcMotor.Direction.FORWARD);
-        frontslide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontSlide.setDirection(DcMotor.Direction.REVERSE);
+        frontSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     // Move linearly from the current position to the specified relative point.
-    // Function blocks until movement completion.
+    // Function conditionally blocks until movement completion.
     // x and y are in inches; power is a float in the range [0.0, 1.0]
-    //If x is 0, use specific angles based on the value of y.
-    //Use Math.atan2(y, x) instead of Math.atan(y / x) because atan2 automatically handles cases where x is 0
-    public void driveToPosition(float x, float y, double power, Telemetry telemetry) {
-        // Handle special case where x is 0 to avoid division by zero
-        double theta;
-        //y > 0: The robot should move directly upwards, so theta = 90° = π/2.
-        //y < 0: The robot should move directly downwards, so theta = -90° = -π/2 (or 3π/2).
-        //x = 0 and y = 0: No movement is required, so an error message is logged, and the method exits with return.
-        if (x == 0) {
-            if (y > 0) {
-                theta = Math.PI / 2; // 90 degrees for positive y
-            } else if (y < 0) {
-                theta = -Math.PI / 2; // -90 degrees for negative y
-            } else {
-                telemetry.addData("Error", "x and y both zero; no movement specified.");
-                telemetry.update();
-                return; // No movement needed
-            }
-        } else {
-            theta = Math.atan2(y, x); // atan2 handles quadrants and x=0 safely
-            //(x > 0, y > 0): First quadrant
-            //(x < 0, y > 0): Second quadrant
-            //(x < 0, y < 0): Third quadrant
-            //(x > 0, y < 0): Fourth quadrant
-        }
+    public void driveToPosition(float x, float y, double power, boolean blockReturn) {
+        // no movement required
+        if (x == 0 && y == 0) return;
+        // atan2 handles quadrants and x == 0 safely
+        double theta = Math.atan2(y, x);
+
         // Compute motor power ratios
         double ADRatio = Math.cos(theta - Math.PI / 4);
         double BCRatio = Math.sin(theta - Math.PI / 4);
 
-        //Adjusts the angle theta by 45° (π/4 radians) because the wheels are oriented at 45° to the robot's frame.
+        // max ratio for power scaling
         double maxRatio = Math.max(Math.abs(ADRatio), Math.abs(BCRatio));
-        if (maxRatio > 1.0) {
-            ADRatio /= maxRatio;
-            BCRatio /= maxRatio;
-        }
 
         // normalize encoders at a reference position (probably 0)
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -145,12 +107,12 @@ public class Robot {
 
         // encoder target position determines travel distance
         // values are rounded to nearest integer
-        double clicks = Math.sqrt(y*y + x*x) / wheelCirc * cpr;
-        telemetry.addData("Target Clicks", clicks);
-        leftFrontDrive.setTargetPosition((int)(clicks * ADRatio/maxRatio + 0.5));
-        rightFrontDrive.setTargetPosition((int)(clicks * BCRatio/maxRatio + 0.5));
-        leftBackDrive.setTargetPosition((int)(clicks * BCRatio/maxRatio + 0.5));
-        rightBackDrive.setTargetPosition((int)(clicks * ADRatio/maxRatio + 0.5));
+        // multiplier corrects movement length
+        double clicks = Math.sqrt(y*y + x*x) / wheelCirc * cpr * drivetrainMultiplier;
+        leftFrontDrive.setTargetPosition((int)(clicks * ADRatio + 0.5));
+        rightFrontDrive.setTargetPosition((int)(clicks * BCRatio + 0.5));
+        leftBackDrive.setTargetPosition((int)(clicks * BCRatio + 0.5));
+        rightBackDrive.setTargetPosition((int)(clicks * ADRatio + 0.5));
 
         // enable distance based movement
         leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -164,32 +126,42 @@ public class Robot {
         leftBackDrive.setPower(BCRatio/maxRatio * power);
         rightBackDrive.setPower(ADRatio/maxRatio * power);
 
-        // block return until movement is complete
-        while(
+        // conditionally block return until movement is complete
+        if (!blockReturn) return;
+        while (
                 leftFrontDrive.isBusy() ||
                 rightFrontDrive.isBusy() ||
                 leftBackDrive.isBusy() ||
                 rightBackDrive.isBusy()
         ) {
-            telemetry.addData("Left Front", leftFrontDrive.getCurrentPosition());
-            telemetry.addData("Right Front", rightFrontDrive.getCurrentPosition());
-            telemetry.addData("Left Back", leftBackDrive.getCurrentPosition());
-            telemetry.addData("Right Back", rightBackDrive.getCurrentPosition());
-            telemetry.update();
-
-            try {
-                sleep(50);}
+            // wait for completion
+            try { sleep(50); }
             catch(InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;
-
             }
         }
     }
 
     // movement is relative; power is a float in the range [0.0, 1.0]
     // optionally block until movement completion
-    public slideToPosition(DcMotor motor, double in, double power, boolean blockReturn) {
-        double currentPos = motor.getCurrentPosition() / cpi;
+    public boolean frontSlideToPosition(double in, double power, boolean blockReturn) {
+        if (in > frontSLideMaxLen) return false;
+        double movementClicks = in / frontSlideWheelCirc * cpr;
+
+        frontSlide.setTargetPosition((int)(movementClicks + 0.5));
+        frontSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontSlide.setPower(power);
+
+        if (!blockReturn) return true;
+        while (frontSlide.isBusy()) {
+            try {
+                sleep(50);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+        return true;
     }
 }

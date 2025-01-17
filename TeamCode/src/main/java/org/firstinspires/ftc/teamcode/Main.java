@@ -42,23 +42,23 @@ public class Main extends LinearOpMode {
             }
 
             // control back main linear slides
-            if (gamepad2.x) {
-                 robot.frontslide.setPower(0.5);
+            if (gamepad2.y) {
+                 robot.frontSlide.setPower(0.5);
             }
-            else if (gamepad2.y) {
-                 robot.frontslide.setPower(-0.5);
+            else if (gamepad2.x) {
+                 robot.frontSlide.setPower(-0.5);
             } else {
-                 robot.frontslide.setPower(0.0);
+                 robot.frontSlide.setPower(0.0);
             }
 
             // control frontward facing side linear slides
             if (gamepad2.a) {
-                robot.armslide.setPower(0.5);
+                robot.armSlide.setPower(0.5);
             }
             else if (gamepad2.b) {
-                robot.armslide.setPower(-0.5);
+                robot.armSlide.setPower(-0.5);
             } else {
-                robot.armslide.setPower(0.0);
+                robot.armSlide.setPower(0.0);
             }
 
             //combine the joystick requests for each axis-motion to determine each wheel's power
