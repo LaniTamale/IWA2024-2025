@@ -144,6 +144,8 @@ public class Robot {
         }
     }
 
+    // Moves the front slide to a specified position (in inches).
+    // If blockReturn is true, the method will wait until movement is complete.
     // movement is relative; power is a float in the range [0.0, 1.0]
     // optionally block until movement completion
     public boolean frontSlideToPosition(double in, double power, boolean blockReturn) {
