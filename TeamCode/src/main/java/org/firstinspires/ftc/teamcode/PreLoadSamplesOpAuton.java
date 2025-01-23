@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="PreLoadSamples0pAuton", group="LinearOpMode")
 // new autonomous code to hang a specimen on the tall rung then driving to push samples.
-public class PreLoadSamlpesOpAuton extends LinearOpMode {
+public class PreLoadSamplesOpAuton extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
@@ -22,61 +22,50 @@ public class PreLoadSamlpesOpAuton extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        // raise slide and lock miniClaw
-        telemetry.addData("Step", "Raising front slide and toggling claw");
+        //Step1: raise slide and lock miniClaw
+        telemetry.addData("Step1", "Raising front slide and toggling claw");
         telemetry.update();
         robot.frontSlideToPosition(18, 0.5, true);
 
-        // drive left
-        telemetry.addData("Step", "Driving left");
+        //Step2: drive left
+        telemetry.addData("Step2", "Driving left");
         telemetry.update();
         robot.driveToPosition(-31, 0, 0.5, true);
 
-        // Score the preload object
-        telemetry.addData("Step", "Hanging specimen");
+        //Step3: Score the preload object
+        telemetry.addData("Step3", "Hanging specimen");
         telemetry.update();
         robot.frontSlideToPosition(12, 0.5, true);
         robot.miniClawServo.setPosition(robot.miniClawOpenPos);
 
-        // Drive Backward to wall
-        telemetry.addData("Step", "Reversing to wall");
+        //Step4: Drive Backward
+        telemetry.addData("Step4", "Reversing to wall");
         telemetry.update();
         robot.driveToPosition(29, 0, 0.5, true);
 
-        // drive to Assent Sample #1
-        telemetry.addData("Step", "Push Sample #1");
+        //Step5: drive to Assent Sample #1
+        telemetry.addData("Step5", "Push Sample #1");
         telemetry.update();
-        robot.driveToPosition(0, -30, 0.5, true);
-        robot.driveToPosition(45, 0, 0.5, true);
+        robot.driveToPosition(0, 35, 0.5, true);
+        robot.driveToPosition(-45, 0, 0.5, true);
+        robot.driveToPosition(0, 9, 0.5, true);
+        robot.driveToPosition(31, 0, 0.5, true);
 
-        // drive left to Submersible
-        telemetry.addData("Step", "Driving left to Observation");
-        telemetry.update();
-        robot.driveToPosition(-31, 0, 0.5, true);
-
-        // drive to sample #2
-        telemetry.addData("Step", "Push Sample #2");
-        telemetry.update();
-        robot.driveToPosition(45, 0, 0.5, true);
-        robot.driveToPosition(0, 10, 0.5, true);
-
-        // drive left to Observation
-        telemetry.addData("Step", "Driving left to Observation");
+        //Step6: drive to sample #2
+        telemetry.addData("Step6", "Push Sample #2");
         telemetry.update();
         robot.driveToPosition(-31, 0, 0.5, true);
+        robot.driveToPosition(0, 3, 0.5, true);
+        robot.driveToPosition(31, 0, 0.5, true);
 
-        // drive to sample #3
+        //Step7: drive to sample #3
         telemetry.addData("Step", "Push Sample #3");
         telemetry.update();
-        robot.driveToPosition(45, 0, 0.5, true);
-        robot.driveToPosition(0, 10, 0.5, true);
-
-        // drive left to Observation
-        telemetry.addData("Step", "Driving left to Observation");
-        telemetry.update();
         robot.driveToPosition(-31, 0, 0.5, true);
+        robot.driveToPosition(0, 3, 0.5, true);
+        robot.driveToPosition(31, 0, 0.5, true);
 
-        // Completion message
+        //Step8: Completion message
         telemetry.addData("Step", "Autonomous Complete");
         telemetry.update();
     }

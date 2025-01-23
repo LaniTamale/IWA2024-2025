@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="PreLoadSamplesAuton", group="LinearOpMode")
 // new autonomous code to hang a specimen on the tall rung then driving to push samples.
-public class PreLoadSamlpesAuton extends LinearOpMode {
+public class PreLoadSamplesAuton extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
@@ -48,21 +48,21 @@ public class PreLoadSamlpesAuton extends LinearOpMode {
         telemetry.update();
         robot.driveToPosition(0, 35, 0.5, true);
         robot.driveToPosition(-45, 0, 0.5, true);
-        robot.driveToPosition(0, 10, 0.5, true);
+        robot.driveToPosition(0, 9, 0.5, true);
         robot.driveToPosition(31, 0, 0.5, true);
 
         //Step6: drive to sample #2
         telemetry.addData("Step6", "Push Sample #2");
         telemetry.update();
         robot.driveToPosition(-31, 0, 0.5, true);
-        robot.driveToPosition(0, 6, 0.5, true);
+        robot.driveToPosition(0, 3, 0.5, true);
         robot.driveToPosition(31, 0, 0.5, true);
 
         //Step7: drive to sample #3
         telemetry.addData("Step", "Push Sample #3");
         telemetry.update();
         robot.driveToPosition(-31, 0, 0.5, true);
-        robot.driveToPosition(0, 6, 0.5, true);
+        robot.driveToPosition(0, 3, 0.5, true);
         robot.driveToPosition(31, 0, 0.5, true);
 
         //Step8: Completion message
