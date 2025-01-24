@@ -46,6 +46,7 @@ public class Main extends LinearOpMode {
                 if (!armLocked) {
                     robot.arm.setTargetPosition(robot.arm.getCurrentPosition());
                     robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    robot.arm.setPower(1);
                     armLocked = true;
                 } else {
                     robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
