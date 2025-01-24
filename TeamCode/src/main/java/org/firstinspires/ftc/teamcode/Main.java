@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "TeleOp", group = "LinearOpMode")
@@ -22,6 +23,7 @@ public class Main extends LinearOpMode {
         //run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             double max;
+            boolean armLocked = false;
 
 
             //POV Mode uses left joystick to go forward & strafe, and right joystick to rotate
@@ -39,6 +41,16 @@ public class Main extends LinearOpMode {
                 robot.arm.setPower(armPower);
             } else {
                 robot.arm.setPower(0);
+            }
+            if (gamepad2.left_bumper) {
+                if (!armLocked) {
+                    robot.arm.setTargetPosition(robot.arm.getCurrentPosition());
+                    robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    armLocked = true;
+                } else {
+                    robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    armLocked = false;
+                }
             }
 
             // control back main linear slides
