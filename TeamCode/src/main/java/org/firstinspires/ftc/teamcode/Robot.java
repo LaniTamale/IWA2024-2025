@@ -72,6 +72,12 @@ public class Robot {
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
+        // normalize encoders at a reference position (probably 0)
+        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         arm.setDirection(DcMotor.Direction.FORWARD);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -100,20 +106,20 @@ public class Robot {
         // max ratio for power scaling
         double maxRatio = Math.max(Math.abs(ADRatio), Math.abs(BCRatio));
 
-        // normalize encoders at a reference position (probably 0)
-        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // set 0 power for safety
+        leftFrontDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightBackDrive.setPower(0);
 
         // encoder target position determines travel distance
         // values are rounded to nearest integer
         // multiplier corrects movement length
         double clicks = Math.sqrt(y*y + x*x) / wheelCirc * cpr * drivetrainMultiplier;
-        leftFrontDrive.setTargetPosition((int)(clicks * ADRatio + 0.5));
-        rightFrontDrive.setTargetPosition((int)(clicks * BCRatio + 0.5));
-        leftBackDrive.setTargetPosition((int)(clicks * BCRatio + 0.5));
-        rightBackDrive.setTargetPosition((int)(clicks * ADRatio + 0.5));
+        leftFrontDrive.setTargetPosition(leftFrontDrive.getCurrentPosition() + (int)(clicks * ADRatio + 0.5));
+        rightFrontDrive.setTargetPosition(rightFrontDrive.getCurrentPosition() + (int)(clicks * BCRatio + 0.5));
+        leftBackDrive.setTargetPosition(leftBackDrive.getCurrentPosition() + (int)(clicks * BCRatio + 0.5));
+        rightBackDrive.setTargetPosition(rightBackDrive.getCurrentPosition() + (int)(clicks * ADRatio + 0.5));
 
         // enable distance based movement
         leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
