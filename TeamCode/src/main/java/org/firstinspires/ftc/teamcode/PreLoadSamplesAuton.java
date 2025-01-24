@@ -35,8 +35,8 @@ public class PreLoadSamplesAuton extends LinearOpMode {
             robot.miniClawServo.setPosition(robot.miniClawOpenPos);
         });
 
-        logAndExecute("Reversing to wall",
-                () -> robot.driveToPosition(29, 0, 0.5, true));
+        logAndExecute("Reversing",
+                () -> robot.driveToPosition(15, 0, 0.5, true));
 
         // Push samples
         pushSamples(robot);
@@ -75,7 +75,7 @@ public class PreLoadSamplesAuton extends LinearOpMode {
         // Push Sample #2
         logAndExecute("Push Sample #2", () -> {
             robot.driveToPosition(-31, 0, 0.5, true);
-            robot.driveToPosition(0, 4, 0.5, true);
+            robot.driveToPosition(0, 5, 0.5, true);
             robot.driveToPosition(33, 0, 0.5, true);
         });
 
