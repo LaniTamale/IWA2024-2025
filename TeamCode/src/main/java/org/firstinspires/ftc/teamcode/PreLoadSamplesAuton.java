@@ -28,7 +28,7 @@ public class PreLoadSamplesAuton extends LinearOpMode {
                 () -> robot.frontSlideToPosition(18, 0.5, true));
 
         logAndExecute("Driving left",
-                () -> robot.driveToPosition(-31, 0, 0.5, true));
+                () -> robot.driveToPosition(31, 0, 0.5, true));
 
         logAndExecute("Hanging specimen", () -> {
             robot.frontSlideToPosition(12, 0.5, true);
@@ -36,7 +36,7 @@ public class PreLoadSamplesAuton extends LinearOpMode {
         });
 
         logAndExecute("Reversing",
-                () -> robot.driveToPosition(15, 0, 0.5, true));
+                () -> robot.driveToPosition(-15, 0, 0.5, true));
 
         // Push samples
         pushSamples(robot);
@@ -66,24 +66,24 @@ public class PreLoadSamplesAuton extends LinearOpMode {
     public void pushSamples(Robot robot) {
         // Push Sample #1
         logAndExecute("Push Sample #1", () -> {
-            robot.driveToPosition(0, 28, 0.5, true);
-            robot.driveToPosition(-50, 0, 0.5, true);
-            robot.driveToPosition(0, 8, 0.5, true);
-            robot.driveToPosition(32, 0, 0.5, true);
+            robot.driveToPosition(0, -30, 0.5, true);
+            robot.driveToPosition(50, 0, 0.5, true);
+            robot.driveToPosition(0, -9, 0.5, true);
+            robot.driveToPosition(-36, 0, 0.5, true);
         });
 
         // Push Sample #2
         logAndExecute("Push Sample #2", () -> {
-            robot.driveToPosition(-31, 0, 0.5, true);
-            robot.driveToPosition(0, 5, 0.5, true);
-            robot.driveToPosition(33, 0, 0.5, true);
+            robot.driveToPosition(36, 0, 0.5, true);
+            robot.driveToPosition(0, -10, 0.5, true);
+            robot.driveToPosition(-36, 0, 0.5, true);
         });
 
         // Push Sample #3
         logAndExecute("Push Sample #3", () -> {
-            robot.driveToPosition(-31, 0, 0.5, true);
-            robot.driveToPosition(0, 3, 0.5, true);
-            robot.driveToPosition(33, 0, 0.5, true);
+            robot.driveToPosition(36, 0, 0.5, true);
+            robot.driveToPosition(0, -5, 0.5, true);
+            robot.driveToPosition(-36, 0, 0.5, true);
         });
     }
 }
