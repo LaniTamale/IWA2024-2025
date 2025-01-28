@@ -23,7 +23,7 @@ public class ParkAuton extends LinearOpMode {
         // raise slide and lock miniClaw
         telemetry.addData("Step", "Parking");
         telemetry.update();
-        robot.driveToPosition(0, 2, 0.5, true);
-        robot.driveToPosition(12, 0, 0.5, true);
+        robot.driveToPosition(2, 0, 0.5, true);
+        robot.driveToPosition(0, -12, 0.5, true);
     }
 }
