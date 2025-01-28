@@ -46,7 +46,7 @@ public class Robot {
     public DcMotor rightBackDrive;
     public DcMotor arm;
     public DcMotor armSlide;
-    public DcMotor frontSlide;
+    public DcMotor vertSlide;
 
     //servos
     public Servo armClawServo;
@@ -61,7 +61,7 @@ public class Robot {
 
         arm = hardwareMap.get(DcMotor.class, "arm");
         armSlide = hardwareMap.get(DcMotor.class, "armslide");
-        frontSlide = hardwareMap.get(DcMotor.class, "frontslide");
+        vertSlide = hardwareMap.get(DcMotor.class, "frontslide");
 
         armClawServo = hardwareMap.get(Servo.class, "armclaw");
         miniClawServo = hardwareMap.get(Servo.class, "miniclaw");
@@ -78,16 +78,16 @@ public class Robot {
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        arm.setDirection(DcMotor.Direction.FORWARD);
+        arm.setDirection(DcMotor.Direction.REVERSE);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         armSlide.setDirection(DcMotor.Direction.FORWARD);
         armSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        frontSlide.setDirection(DcMotor.Direction.REVERSE);
-        frontSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        vertSlide.setDirection(DcMotor.Direction.REVERSE);
+        vertSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        vertSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        vertSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     // Move linearly from the current position to the specified relative point.
@@ -158,12 +158,12 @@ public class Robot {
         if (in > frontSLideMaxLen) return false;
         double movementClicks = in / frontSlideWheelCirc * cpr;
 
-        frontSlide.setTargetPosition((int)(movementClicks + 0.5));
-        frontSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontSlide.setPower(power);
+        vertSlide.setTargetPosition((int)(movementClicks + 0.5));
+        vertSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        vertSlide.setPower(power);
 
         if (!blockReturn) return true;
-        while (frontSlide.isBusy()) {
+        while (vertSlide.isBusy()) {
             try {
                 sleep(50);
             } catch (InterruptedException e) {
