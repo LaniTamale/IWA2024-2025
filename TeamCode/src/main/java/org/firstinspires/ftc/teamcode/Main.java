@@ -56,12 +56,12 @@ public class Main extends LinearOpMode {
 
             // control back main linear slides
             if (gamepad2.y) {
-                 robot.frontSlide.setPower(0.5);
+                 robot.vertSlide.setPower(0.5);
             }
             else if (gamepad2.x) {
-                 robot.frontSlide.setPower(-0.5);
+                 robot.vertSlide.setPower(-0.5);
             } else {
-                 robot.frontSlide.setPower(0.0);
+                 robot.vertSlide.setPower(0.0);
             }
 
             // control frontward facing side linear slides
