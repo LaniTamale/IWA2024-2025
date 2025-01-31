@@ -81,5 +81,5 @@ public class PreLoadDoubleTestAuton extends LinearOpMode {
     public void turn180(Robot robot) {
     }
     public void doubleSpecimen(Robot robot) {
-        }
     }
+}
