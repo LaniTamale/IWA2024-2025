@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+
 import java.lang.Math;
+
 import static java.lang.Thread.sleep;
 
 /*
@@ -14,7 +16,7 @@ hardwareMap names come from the robot configuration step on the DS or DC.
 
 public class Robot {
     // dimensions
-    final public double width = 16.0; // in
+    final public double drivetrainDiagonal = 19.5; // in
     final public double diameter = 4.125; // in
     public boolean isArmClawOpen;
     public boolean isMiniClawOpen;
@@ -60,24 +62,22 @@ public class Robot {
         rightBackDrive = hardwareMap.get(DcMotor.class, "backRight");
 
         arm = hardwareMap.get(DcMotor.class, "arm");
-        armSlide = hardwareMap.get(DcMotor.class, "armslide");
-        vertSlide = hardwareMap.get(DcMotor.class, "frontslide");
+        armSlide = hardwareMap.get(DcMotor.class, "armSlide");
+        vertSlide = hardwareMap.get(DcMotor.class, "vertSlide");
 
-        armClawServo = hardwareMap.get(Servo.class, "armclaw");
-        miniClawServo = hardwareMap.get(Servo.class, "miniclaw");
+        armClawServo = hardwareMap.get(Servo.class, "armClaw");
+        miniClawServo = hardwareMap.get(Servo.class, "miniClaw");
 
-        // configure
+        // configure drive motors
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        // normalize encoders at a reference position (probably 0)
-        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // Configure encoders
+        resetEncoders();
 
+        // Configure slides
         arm.setDirection(DcMotor.Direction.REVERSE);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -86,8 +86,19 @@ public class Robot {
 
         vertSlide.setDirection(DcMotor.Direction.REVERSE);
         vertSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        vertSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         vertSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void resetEncoders() {
+        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     // Move linearly from the current position to the specified relative point.
@@ -134,20 +145,84 @@ public class Robot {
         rightBackDrive.setPower(ADRatio/maxRatio * power);
 
         // conditionally block return until movement is complete
-        if (!blockReturn) return;
-        while (
-                leftFrontDrive.isBusy() ||
-                rightFrontDrive.isBusy() ||
-                leftBackDrive.isBusy() ||
-                rightBackDrive.isBusy()
-        ) {
-            // wait for completion
-            try { sleep(50); }
-            catch(InterruptedException e) {
-                Thread.currentThread().interrupt();
-                break;
+        if (!blockReturn) return; // Exit if non-blocking mode
+
+        while (leftFrontDrive.isBusy() || rightFrontDrive.isBusy() ||
+                        leftBackDrive.isBusy() || rightBackDrive.isBusy()) { // Check if motors are moving
+            try {
+                Thread.sleep(50); // Wait briefly before checking again
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // Restore interrupt status
+                break; // Exit loop on interruption
             }
         }
+    }
+
+    public void driveToPositionREL(float x, float y, double power, boolean blockReturn) {
+        // no movement required
+        if (x == 0 && y == 0) return;
+        // atan2 handles quadrants and x == 0 safely
+        double theta = Math.atan2(y, x);
+
+        // Compute motor power ratios
+        double ADRatio = Math.cos(theta - Math.PI / 4);
+        double BCRatio = Math.sin(theta - Math.PI / 4);
+
+        // max ratio for power scaling
+        double maxRatio = Math.max(Math.abs(ADRatio), Math.abs(BCRatio));
+
+        // set 0 power for safety
+        leftFrontDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightBackDrive.setPower(0);
+
+        // Reset encoders so movement is done from a reference position
+        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // encoder target position determines travel distance
+        // values are rounded to nearest integer
+        // multiplier corrects movement length
+        double clicks = Math.sqrt(y*y + x*x) / wheelCirc * cpr * drivetrainMultiplier;
+        leftFrontDrive.setTargetPosition((int)(clicks * ADRatio + 0.5));
+        rightFrontDrive.setTargetPosition((int)(clicks * BCRatio + 0.5));
+        leftBackDrive.setTargetPosition((int)(clicks * BCRatio + 0.5));
+        rightBackDrive.setTargetPosition((int)(clicks * ADRatio + 0.5));
+
+        // enable distance based movement
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // begin movement; direction is based on motor power
+        leftFrontDrive.setPower(ADRatio/maxRatio * power);
+        rightFrontDrive.setPower(BCRatio/maxRatio * power);
+        leftBackDrive.setPower(BCRatio/maxRatio * power);
+        rightBackDrive.setPower(ADRatio/maxRatio * power);
+
+        // conditionally block return until movement is complete
+        if (!blockReturn) return; // Exit if non-blocking mode
+
+        while (leftFrontDrive.isBusy() || rightFrontDrive.isBusy() ||
+                leftBackDrive.isBusy() || rightBackDrive.isBusy()) { // Check if motors are moving
+            try {
+                Thread.sleep(50); // Wait briefly before checking again
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // Restore interrupt status
+                break; // Exit loop on interruption
+            }
+        }
+    }
+
+    public void stopMotors() {
+        leftFrontDrive.setPower(0); // Stop front-left motor
+        rightFrontDrive.setPower(0); // Stop front-right motor
+        leftBackDrive.setPower(0); // Stop back-left motor
+        rightBackDrive.setPower(0); // Stop back-right motor
     }
 
     // Moves the front slide to a specified position (in inches).
@@ -172,5 +247,51 @@ public class Robot {
             }
         }
         return true;
+    }
+
+
+
+    public void turn180(double power, boolean blockReturn) {
+        // Reset encoders to ensure accurate movement
+        resetEncoders();
+
+        // Determine encoder target position for a 180-degree turn
+        // Turning requires the wheels on one side to move forward and the other side to move backward
+        //Instead of computing movement based on x and y positions, determined the number of encoder clicks required for a 180-degree turn:
+        int turnClicks = (int) (wheelCirc * Math.PI / 2 * cpr * drivetrainDiagonal * drivetrainMultiplier);
+
+        // Set target positions for a 180-degree turn
+        //Instead of moving motors in a linear direction (x, y), function makes the left side move forward and the right side move backward
+        leftFrontDrive.setTargetPosition(leftFrontDrive.getCurrentPosition() + turnClicks);
+        leftBackDrive.setTargetPosition(leftBackDrive.getCurrentPosition() + turnClicks);
+        rightFrontDrive.setTargetPosition(rightFrontDrive.getCurrentPosition() - turnClicks);
+        rightBackDrive.setTargetPosition(rightBackDrive.getCurrentPosition() - turnClicks);
+
+        // Enable encoder distance-based movement
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Set motor power for rotation
+        //ensures that both sides rotate at the same speed
+        leftFrontDrive.setPower(power);
+        leftBackDrive.setPower(power);
+        rightFrontDrive.setPower(power);
+        rightBackDrive.setPower(power);
+
+        // Block until movement is complete if required
+        if (!blockReturn) return;
+
+        //ensures the robot fully completes the turn before continuing
+        while (leftFrontDrive.isBusy() || rightFrontDrive.isBusy() ||
+                        leftBackDrive.isBusy() || rightBackDrive.isBusy()) {
+            try {
+                Thread.sleep(50); // Wait briefly before checking again
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
     }
 }
