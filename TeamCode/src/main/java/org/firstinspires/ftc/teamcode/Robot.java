@@ -215,8 +215,6 @@ public class Robot {
         return true;
     }
 
-
-
     // degrees is used for familiarity
     // positive power for clockwise, negative for counterclockwise
     public void rotate(double degrees, double power, boolean blockReturn) {
@@ -225,11 +223,7 @@ public class Robot {
 
         // Determine encoder target position for turn
         // Turning mecanum drive is normal tank tread movement
-        // drivetrain circumference / wheel circumference = number of rotations
-        // num rotations * cpr = clicks for a full circle
-        // clicks per circle * (fraction of a whole circle as [degrees / 360]) = clicks for movement
-        // clicks for movement * scale factor = adjusted clicks
-        int turnClicks = (int) (((Math.PI * drivetrainDiagonal) / wheelCirc) * cpr * (degrees / 360) * drivetrainMultiplier);
+        int turnClicks = (int) (Math.PI * drivetrainDiagonal / wheelCirc * cpr * degrees / 360 * drivetrainMultiplier);
 
         // Set target positions for a 180-degree turn
         //Instead of moving motors in a linear direction (x, y), function makes the left side move forward and the right side move backward
