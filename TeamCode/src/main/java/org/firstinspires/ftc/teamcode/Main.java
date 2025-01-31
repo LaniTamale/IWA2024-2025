@@ -25,7 +25,6 @@ public class Main extends LinearOpMode {
             double max;
             boolean armLocked = false;
 
-
             //POV Mode uses left joystick to go forward & strafe, and right joystick to rotate
             double axial = -gamepad1.left_stick_y; //note: pushing stick forward gives negative value
             double lateral = gamepad1.left_stick_x;
