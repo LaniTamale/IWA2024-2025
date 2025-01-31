@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "PreLoadDoubleAuton", group = "LinearOpMode")
 // Autonomous code to hang a specimen on the tall rung and push samples.
@@ -35,7 +34,7 @@ public class PreLoadDoubleAuton extends LinearOpMode {
         logAndExecute("Reversing and turning 180 degrees", () -> {
             robot.driveToPosition(-15, 0, 0.9, true);
             robot.frontSlideToPosition(0, 0.7, false);
-            robot.turn180(0.5, true);
+            robot.rotate(180, 0.5, true);
         });
 
         // Drive to wall
@@ -55,7 +54,7 @@ public class PreLoadDoubleAuton extends LinearOpMode {
         logAndExecute("return and spin", () -> {
             robot.driveToPosition(-13, 0, 1.0, true);
             robot.driveToPosition(0, -38, 1.0, true);
-            robot.turn180(0.5,true);
+            robot.rotate(180, 0.5,true);
         });
 
         // Drive to submersible

@@ -17,7 +17,6 @@ hardwareMap names come from the robot configuration step on the DS or DC.
 public class Robot {
     // dimensions
     final public double drivetrainDiagonal = 19.5; // in
-    final public double diameter = 4.125; // in
     public boolean isArmClawOpen;
     public boolean isMiniClawOpen;
     double cpr = 537.7; // clicks
@@ -39,7 +38,6 @@ public class Robot {
     public boolean isClawOpen = false;
     public boolean rightBumperPrev = false;
     public boolean rightTriggerPrev = false;
-    public boolean leftBumperPrev = false;
 
     // motors
     public DcMotor leftFrontDrive;
@@ -75,7 +73,8 @@ public class Robot {
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // Configure encoders
-        resetEncoders();
+        drivetrainSetRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        drivetrainSetRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Configure slides
         arm.setDirection(DcMotor.Direction.REVERSE);
@@ -89,16 +88,11 @@ public class Robot {
         vertSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void resetEncoders() {
-        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    public void drivetrainSetRunMode(DcMotor.RunMode mode) {
+        leftFrontDrive.setMode(mode);
+        rightFrontDrive.setMode(mode);
+        leftBackDrive.setMode(mode);
+        rightBackDrive.setMode(mode);
     }
 
     // Move linearly from the current position to the specified relative point.
@@ -117,12 +111,6 @@ public class Robot {
         // max ratio for power scaling
         double maxRatio = Math.max(Math.abs(ADRatio), Math.abs(BCRatio));
 
-        // set 0 power for safety
-        leftFrontDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        rightBackDrive.setPower(0);
-
         // encoder target position determines travel distance
         // values are rounded to nearest integer
         // multiplier corrects movement length
@@ -133,10 +121,7 @@ public class Robot {
         rightBackDrive.setTargetPosition(rightBackDrive.getCurrentPosition() + (int)(clicks * ADRatio + 0.5));
 
         // enable distance based movement
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        drivetrainSetRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // begin movement; direction is based on motor power
         leftFrontDrive.setPower(ADRatio/maxRatio * power);
@@ -171,17 +156,8 @@ public class Robot {
         // max ratio for power scaling
         double maxRatio = Math.max(Math.abs(ADRatio), Math.abs(BCRatio));
 
-        // set 0 power for safety
-        leftFrontDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        rightBackDrive.setPower(0);
-
         // Reset encoders so movement is done from a reference position
-        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        drivetrainSetRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // encoder target position determines travel distance
         // values are rounded to nearest integer
@@ -193,10 +169,7 @@ public class Robot {
         rightBackDrive.setTargetPosition((int)(clicks * ADRatio + 0.5));
 
         // enable distance based movement
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        drivetrainSetRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // begin movement; direction is based on motor power
         leftFrontDrive.setPower(ADRatio/maxRatio * power);
@@ -216,13 +189,6 @@ public class Robot {
                 break; // Exit loop on interruption
             }
         }
-    }
-
-    public void stopMotors() {
-        leftFrontDrive.setPower(0); // Stop front-left motor
-        rightFrontDrive.setPower(0); // Stop front-right motor
-        leftBackDrive.setPower(0); // Stop back-left motor
-        rightBackDrive.setPower(0); // Stop back-right motor
     }
 
     // Moves the front slide to a specified position (in inches).
@@ -251,27 +217,25 @@ public class Robot {
 
 
 
-    public void turn180(double power, boolean blockReturn) {
+    // degrees is used for familiarity
+    // positive power for clockwise, negative for counterclockwise
+    public void rotate(double degrees, double power, boolean blockReturn) {
         // Reset encoders to ensure accurate movement
-        resetEncoders();
+        drivetrainSetRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        // Determine encoder target position for a 180-degree turn
-        // Turning requires the wheels on one side to move forward and the other side to move backward
-        //Instead of computing movement based on x and y positions, determined the number of encoder clicks required for a 180-degree turn:
-        int turnClicks = (int) (wheelCirc * Math.PI / 2 * cpr * drivetrainDiagonal * drivetrainMultiplier);
+        // Determine encoder target position for turn
+        // Turning mecanum drive is normal tank tread movement
+        int turnClicks = (int) (Math.PI * drivetrainDiagonal / wheelCirc * cpr * degrees / 360 * drivetrainMultiplier);
 
         // Set target positions for a 180-degree turn
         //Instead of moving motors in a linear direction (x, y), function makes the left side move forward and the right side move backward
-        leftFrontDrive.setTargetPosition(leftFrontDrive.getCurrentPosition() + turnClicks);
-        leftBackDrive.setTargetPosition(leftBackDrive.getCurrentPosition() + turnClicks);
-        rightFrontDrive.setTargetPosition(rightFrontDrive.getCurrentPosition() - turnClicks);
-        rightBackDrive.setTargetPosition(rightBackDrive.getCurrentPosition() - turnClicks);
+        leftFrontDrive.setTargetPosition(turnClicks);
+        leftBackDrive.setTargetPosition(turnClicks);
+        rightFrontDrive.setTargetPosition(-turnClicks);
+        rightBackDrive.setTargetPosition(-turnClicks);
 
         // Enable encoder distance-based movement
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        drivetrainSetRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Set motor power for rotation
         //ensures that both sides rotate at the same speed

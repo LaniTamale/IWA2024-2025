@@ -39,7 +39,7 @@ public class PreLoadDoubleTestAuton extends LinearOpMode {
         logAndExecute("Reversing and turning 180 degrees", () -> {
             robot.driveToPositionREL(-15, 0, 0.9, true);
             robot.frontSlideToPosition(0, 0.7, false);
-            robot.turn180(0.5, true);
+            robot.rotate(180, 0.5, true);
         });
 
         // Drive to wall
@@ -59,7 +59,7 @@ public class PreLoadDoubleTestAuton extends LinearOpMode {
         logAndExecute("return and spin", () -> {
             robot.driveToPositionREL(-13, 0, 1.0, true);
             robot.driveToPositionREL(0, -38, 1.0, true);
-            robot.turn180(0.5,true);
+            robot.rotate(180, 0.5,true);
         });
 
         // Drive to submersible
