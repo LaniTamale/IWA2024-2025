@@ -27,7 +27,7 @@ public class PreLoadAuton extends LinearOpMode {
             robot.frontSlideToPosition(18, 0.5, true);
         });
 
-        // Drive left
+        // Drive right
         logAndExecute("Driving right", () -> {
             robot.driveToPosition(31, 0, 0.5, true);
         });
