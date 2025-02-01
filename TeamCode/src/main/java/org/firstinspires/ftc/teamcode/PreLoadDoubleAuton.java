@@ -21,10 +21,10 @@ public class PreLoadDoubleAuton extends LinearOpMode {
 
         // Hang first preload
         logAndExecute("Raising front slide and toggling claw",
-                () -> robot.frontSlideToPosition(17, 0.8, true));
+                () -> robot.frontSlideToPosition(17, 1.0, true));
 
         logAndExecute("Driving right",
-                () -> robot.driveToPosition(31, 0, 1.0, true));
+                () -> robot.driveToPosition(34, 0, 0.8, true));
 
         logAndExecute("Hanging specimen", () -> {
             robot.frontSlideToPosition(12, 0.8, true);
@@ -32,35 +32,35 @@ public class PreLoadDoubleAuton extends LinearOpMode {
         });
 
         logAndExecute("Reversing and turning 180 degrees", () -> {
-            robot.driveToPosition(-15, 0, 1.0, true);
-            robot.frontSlideToPosition(0, 0.8, false);
+            robot.driveToPosition(-18, 0, 0.8, true);
+            robot.frontSlideToPosition(0, 1.0, false);
             robot.rotate(180, 0.5, true);
         });
 
         // Drive to wall
         logAndExecute("drive to wall", () -> {
-            robot.driveToPosition(0, 40, 1.0, true);
-            robot.driveToPosition(12, 0, 1.0, true);
+            robot.driveToPosition(0, 42, 0.7, true);
+            robot.driveToPosition(21, 0, 0.7, true);
         });
 
         // close claw
         logAndExecute("close claw", () -> {
             robot.miniClawServo.setPosition(robot.miniClawClosePos);
-            sleep(2000); // Wait for 2 seconds
-            robot.frontSlideToPosition(17, 0.8, true);
+            sleep(250); // Wait for 0.25 second
+            robot.frontSlideToPosition(17, 1.0, true);
         });
 
         // return and spin
         logAndExecute("return and spin", () -> {
-            robot.driveToPosition(-13, 0, 1.0, true);
-            robot.driveToPosition(0, -38, 1.0, true);
+            robot.driveToPosition(-15, 0, 0.8, true);
+            robot.driveToPosition(0, -41, 0.8, true);
             robot.rotate(180, 0.5,true);
         });
 
         // Drive to submersible
         logAndExecute("drive to submersible", () -> {
-            robot.driveToPosition(21, 0, 1.0, true);
-            robot.frontSlideToPosition(12, 0.8, true);
+            robot.driveToPosition(24, 0, 0.9, true);
+            robot.frontSlideToPosition(12, 1.0, true);
             robot.miniClawServo.setPosition(robot.miniClawOpenPos);
 
             // Completion message
