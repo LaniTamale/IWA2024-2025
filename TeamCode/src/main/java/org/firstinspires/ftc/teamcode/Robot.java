@@ -23,7 +23,7 @@ public class Robot {
     double wheelCirc = 11.9; // in
     static final double frontSlideWheelCirc = Math.PI * 1.5;
     // to correct movement lengths
-    static final double drivetrainMultiplier = 1.65;
+    static final double drivetrainMultiplier = 1.5;
 
     // limits
     final public double ArmClawOpenPos = 0.3;
@@ -218,6 +218,7 @@ public class Robot {
     // degrees is used for familiarity
     // positive power for clockwise, negative for counterclockwise
     public void rotate(double degrees, double power, boolean blockReturn) {
+
         // Reset encoders to ensure accurate movement
         drivetrainSetRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
