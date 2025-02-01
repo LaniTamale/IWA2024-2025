@@ -2,13 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "PreLoadSamplesAuton", group = "LinearOpMode")
 // Autonomous code to hang a specimen on the tall rung and push samples.
 public class PreLoadSamplesAuton extends LinearOpMode {
     // Timer for tracking runtime
-    private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -25,13 +23,13 @@ public class PreLoadSamplesAuton extends LinearOpMode {
 
         // Execute autonomous steps
         logAndExecute("Raising front slide and toggling claw",
-                () -> robot.frontSlideToPosition(18, 0.5, true));
+                () -> robot.frontSlideToPosition(17, 1.0, true));
 
         logAndExecute("Driving right",
-                () -> robot.driveToPosition(31, 0, 0.5, true));
+                () -> robot.driveToPosition(34, 0, 0.7, true));
 
         logAndExecute("Hanging specimen", () -> {
-            robot.frontSlideToPosition(12, 0.5, true);
+            robot.frontSlideToPosition(12, 1.0, true);
             robot.miniClawServo.setPosition(robot.miniClawOpenPos);
         });
 
@@ -53,10 +51,10 @@ public class PreLoadSamplesAuton extends LinearOpMode {
     public void pushSamples(Robot robot) {
         // Push Sample #1
         logAndExecute("Push Sample #1", () -> {
-            robot.driveToPosition(0, -32, 0.5, true);
-            robot.driveToPosition(32, 0, 0.5, true);
-            robot.driveToPosition(0, -9, 0.5, true);
-            robot.driveToPosition(-36, 0, 0.5, true);
+            robot.driveToPosition(0, -33, 0.5, true);
+            robot.driveToPosition(34, 0, 0.5, true);
+            robot.driveToPosition(0, -12, 0.5, true);
+            robot.driveToPosition(-38, 0, 0.5, true);
         });
 
         // Push Sample #2
