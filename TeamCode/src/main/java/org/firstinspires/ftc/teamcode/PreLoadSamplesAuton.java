@@ -19,7 +19,6 @@ public class PreLoadSamplesAuton extends LinearOpMode {
         robot.miniClawServo.setPosition(robot.miniClawClosePos);
 
         waitForStart();
-        runtime.reset();
 
         // Execute autonomous steps
         logAndExecute("Raising front slide and toggling claw",
@@ -34,7 +33,7 @@ public class PreLoadSamplesAuton extends LinearOpMode {
         });
 
         logAndExecute("Reversing",
-                () -> robot.driveToPosition(-15, 0, 0.5, true));
+                () -> robot.driveToPosition(-15, 0, 0.7, true));
 
         // Push samples
         pushSamples(robot);
@@ -43,32 +42,35 @@ public class PreLoadSamplesAuton extends LinearOpMode {
         telemetry.addData("Step", "Autonomous Complete");
         telemetry.update();
     }
+
     public void logAndExecute(String step, Runnable action) {
         telemetry.addData("Step", step);
         telemetry.update();
         action.run();
     }
+
     public void pushSamples(Robot robot) {
         // Push Sample #1
         logAndExecute("Push Sample #1", () -> {
-            robot.driveToPosition(0, -33, 0.5, true);
-            robot.driveToPosition(34, 0, 0.5, true);
-            robot.driveToPosition(0, -12, 0.5, true);
-            robot.driveToPosition(-38, 0, 0.5, true);
+            robot.driveToPosition(0, -33, 0.7, true);
+            robot.driveToPosition(34, 0, 0.7, true);
+            robot.driveToPosition(0, -14, 0.7, true);
+            robot.driveToPosition(-38, 0, 0.7, true);
         });
 
-        // Push Sample #2
+        // Push Sample #2 + Park
         logAndExecute("Push Sample #2", () -> {
-            robot.driveToPosition(36, 0, 0.5, true);
-            robot.driveToPosition(0, -10, 0.5, true);
-            robot.driveToPosition(-36, 0, 0.5, true);
+            robot.driveToPosition(38, 0, 0.7, true);
+            robot.driveToPosition(0, -9, 0.7, true);
+            robot.driveToPosition(-42, 0, 0.7, true);
         });
 
         // Push Sample #3
-        logAndExecute("Push Sample #3", () -> {
-            robot.driveToPosition(36, 0, 0.5, true);
-            robot.driveToPosition(0, -5, 0.5, true);
-            robot.driveToPosition(-36, 0, 0.5, true);
-        });
+       /* logAndExecute("Push Sample #3", () -> {
+            robot.driveToPosition(38, 0, 0.7, true);
+            robot.driveToPosition(0, -5, 0.7, true);
+            robot.driveToPosition(-38, 0, 0.7, true);
+        */
+
     }
 }
