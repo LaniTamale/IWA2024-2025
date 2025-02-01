@@ -24,7 +24,7 @@ public class PreLoadDoubleAuton extends LinearOpMode {
                 () -> robot.frontSlideToPosition(17, 1.0, true));
 
         logAndExecute("Driving right",
-                () -> robot.driveToPosition(34, 0, 0.8, true));
+                () -> robot.driveToPosition(35, 0, 0.8, true));
 
         logAndExecute("Hanging specimen", () -> {
             robot.frontSlideToPosition(12, 0.8, true);
@@ -39,8 +39,8 @@ public class PreLoadDoubleAuton extends LinearOpMode {
 
         // Drive to wall
         logAndExecute("drive to wall", () -> {
-            robot.driveToPosition(0, 42, 0.7, true);
-            robot.driveToPosition(21, 0, 0.7, true);
+            robot.driveToPosition(0, 40, 0.5, true);
+            robot.driveToPosition(21, 0, 0.8, true);
         });
 
         // close claw
@@ -52,8 +52,8 @@ public class PreLoadDoubleAuton extends LinearOpMode {
 
         // return and spin
         logAndExecute("return and spin", () -> {
-            robot.driveToPosition(-15, 0, 0.8, true);
-            robot.driveToPosition(0, -41, 0.8, true);
+            robot.driveToPosition(-15, 0, 0.9, true);
+            robot.driveToPosition(0, -42, 0.8, true);
             robot.rotate(180, 0.5,true);
         });
 
