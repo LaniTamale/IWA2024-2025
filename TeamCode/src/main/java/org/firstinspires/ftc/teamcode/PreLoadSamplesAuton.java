@@ -25,7 +25,7 @@ public class PreLoadSamplesAuton extends LinearOpMode {
                 () -> robot.frontSlideToPosition(17, 1.0, true));
 
         logAndExecute("Driving right",
-                () -> robot.driveToPosition(34, 0, 0.7, true));
+                () -> robot.driveToPosition(35, 0, 0.7, true));
 
         logAndExecute("Hanging specimen", () -> {
             robot.frontSlideToPosition(12, 1.0, true);
