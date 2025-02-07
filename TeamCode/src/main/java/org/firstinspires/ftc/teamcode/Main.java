@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+
 @TeleOp(name = "TeleOp", group = "LinearOpMode")
 // TeleOp for claw bot with Mecanum drive
 public class Main extends LinearOpMode {
@@ -99,6 +100,7 @@ public class Main extends LinearOpMode {
             robot.leftBackDrive.setPower(leftBackPower);
             robot.rightBackDrive.setPower(rightBackPower);
 
+            /*
             // Arm claw
             if (gamepad2.right_trigger > 0.5 && !robot.rightTriggerPrev) {
                 robot.isArmClawOpen = !robot.isArmClawOpen;
@@ -109,6 +111,23 @@ public class Main extends LinearOpMode {
             } else {
                 robot.armClawServo.setPosition(robot.ArmClawClosePos);
             }
+             */
+
+            // Auto Intake
+            // Example: Timed Intake Cycle (opens and closes every X seconds)
+            //Timed cycle: Alternates between open and closed states at a set time interval.
+            double currentTime = robot.timer.seconds();
+            if (currentTime - robot.lastIntakeTime > robot.intakeInterval) {
+                robot.isArmClawOpen = !robot.isArmClawOpen;
+                robot.lastIntakeTime = currentTime;  // Reset timer
+            }
+
+            if (robot.isArmClawOpen) {
+                robot.armClawServo.setPosition(robot.ArmClawOpenPos);
+            } else {
+                robot.armClawServo.setPosition(robot.ArmClawClosePos);
+            }
+
 
             // Mini claw
             if (gamepad2.right_bumper && !robot.rightBumperPrev) {

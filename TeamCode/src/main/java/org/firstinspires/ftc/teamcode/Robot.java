@@ -3,9 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-
+import com.qualcomm.robotcore.util.ElapsedTime;
 import java.lang.Math;
-
 import static java.lang.Thread.sleep;
 
 /*
@@ -38,6 +37,10 @@ public class Robot {
     public boolean isClawOpen = false;
     public boolean rightBumperPrev = false;
     public boolean rightTriggerPrev = false;
+    public ElapsedTime timer = new ElapsedTime();  // Create a timer instance
+    public double lastIntakeTime = 0;
+    public double intakeInterval = 2.0;  // Adjust timing as needed (seconds)
+
 
     // motors
     public DcMotor leftFrontDrive;
