@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -25,8 +27,7 @@ public class Robot {
     static final double drivetrainMultiplier =  1.5;
 
     // limits
-    final public double ArmClawOpenPos = 0.3;
-    final public double ArmClawClosePos = 0.0;
+
 
     final public double miniClawOpenPos = 0.3;
     final public double miniClawClosePos = 0.0;
@@ -34,9 +35,7 @@ public class Robot {
     final public double frontSLideMaxLen = 18; // in
 
     // state
-    public boolean isClawOpen = false;
     public boolean rightBumperPrev = false;
-    public boolean rightTriggerPrev = false;
     public ElapsedTime timer = new ElapsedTime();  // Create a timer instance
     public double lastIntakeTime = 0;
     public double intakeInterval = 2.0;  // Adjust timing as needed (seconds)
@@ -52,8 +51,10 @@ public class Robot {
     public DcMotor vertSlide;
 
     //servos
-    public Servo armClawServo;
+    public CRServo intakeServo1;
+    public CRServo intakeServo2;
     public Servo miniClawServo;
+    public CRServo wristServo;
 
     public Robot(HardwareMap hardwareMap) {
         // init hardware
@@ -66,8 +67,10 @@ public class Robot {
         armSlide = hardwareMap.get(DcMotor.class, "armSlide");
         vertSlide = hardwareMap.get(DcMotor.class, "vertSlide");
 
-        armClawServo = hardwareMap.get(Servo.class, "armClaw");
+        intakeServo1 = hardwareMap.get(CRServo.class, "intakeServo1");
+        intakeServo2 = hardwareMap.get(CRServo.class, "intakeServo2");
         miniClawServo = hardwareMap.get(Servo.class, "miniClaw");
+        wristServo = hardwareMap.get(CRServo.class, "wristServo");
 
         // configure drive motors
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -78,6 +81,11 @@ public class Robot {
         // Configure encoders
         drivetrainSetRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drivetrainSetRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // Configure servos
+        intakeServo1.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeServo2.setDirection(DcMotorSimple.Direction.REVERSE);
+        wristServo.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Configure slides
         arm.setDirection(DcMotor.Direction.REVERSE);

@@ -15,7 +15,7 @@ public class Main extends LinearOpMode {
 
         //wait for the game to start (driver presses START)
         telemetry.addData("status", "initialized");
-        telemetry.addData("Servo Position", robot.armClawServo.getPosition());
+        telemetry.addData("Servo Power", robot.intakeServo1.getPower());
         //telemetry.addData("Servo Position", wristServo.getPosition());
         telemetry.update();
         waitForStart();
@@ -122,12 +122,17 @@ public class Main extends LinearOpMode {
                 robot.lastIntakeTime = currentTime;  // Reset timer
             }
 
-            if (robot.isArmClawOpen) {
-                robot.armClawServo.setPosition(robot.ArmClawOpenPos);
-            } else {
-                robot.armClawServo.setPosition(robot.ArmClawClosePos);
+            if (gamepad2.right_trigger > 0) {
+                robot.intakeServo1.setPower(gamepad2.right_trigger);
+                robot.intakeServo2.setPower(gamepad2.right_trigger);
+            } else if (gamepad2.left_trigger > 0){
+                robot.intakeServo1.setPower(-gamepad2.left_trigger);
+                robot.intakeServo2.setPower(-gamepad2.left_trigger);
             }
-
+            else {
+                robot.intakeServo1.setPower(0);
+                robot.intakeServo2.setPower(0);
+            }
 
             // Mini claw
             if (gamepad2.right_bumper && !robot.rightBumperPrev) {
@@ -140,26 +145,23 @@ public class Main extends LinearOpMode {
                 robot.miniClawServo.setPosition(robot.miniClawClosePos);
             }
 
-
-            /*
             // wrist
-            if (gamepad2.left_bumper && !leftBumperPrev) {
-                isWristOpen = !isWristOpen;
+            if (gamepad2.dpad_right) {
+                robot.wristServo.setPower(0.5);
             }
-            leftBumperPrev = gamepad2.left_bumper;
-            if (isWristOpen) {
-                wristServo.setPosition(0);
-            } else {
-                wristServo.setPosition(0.7);
+            else if (gamepad2.dpad_left) {
+                robot.wristServo.setPower(-0.5);
             }
-            */
+            else {
+                robot.wristServo.setPower(0);
+            }
 
             //show the elapsed game time and wheel power.
             telemetry.addData("status", "Run Time:" + runtime);
             telemetry.addData("Front left/Right", "%4.2f,%4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back left/Right", "%4.2f,%4.2f", leftBackPower, rightBackPower);
             //telemetry.addData("Wrist Pos", "%4.2f", wristServo.getPosition());
-            telemetry.addData("Claw Pos", "%4.2f", robot.armClawServo.getPosition());
+            telemetry.addData("Claw Power", "%4.2f", robot.intakeServo1.getPower());
             telemetry.addData("robot.arm Pos", robot.arm.getCurrentPosition());
             telemetry.update();
         }
