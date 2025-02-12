@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -14,25 +16,66 @@ import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 public class TestAuton extends LinearOpMode {
     public void runOpMode() {
         Robot robot = new Robot(hardwareMap);
-        Pose2d initialPose = new Pose2d(11.8, 61.7, Math.toRadians(90));
+        Pose2d initialPose = new Pose2d(12, -60, Math.toRadians(180));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
-
-        Action trajectoryActionForward = drive.actionBuilder(initialPose)
-                .lineToX(24)
-                .build();
+        robot.miniClawServo.setPosition(robot.miniClawClosePos);
 
         waitForStart();
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        trajectoryActionForward
-                )
-        );
+        // Hang first preload
+        logAndExecute("Raising front slide and toggling claw",
+                () -> robot.frontSlideToPosition(17, 1.0, false));
+        TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
+                .strafeTo(new Vector2d(0, -35));
+        logAndExecute("Driving right",
+                () -> Actions.runBlocking(new SequentialAction(tab1.build())));
+        logAndExecute("Hanging specimen", () -> {
+            robot.frontSlideToPosition(12, 0.8, true);
+            robot.miniClawServo.setPosition(robot.miniClawOpenPos);
+        });
 
-        robot.frontSlideToPosition(8, 0.5, true);
-        boolean ret = robot.frontSlideToPosition(8, 0.5, true);
-        telemetry.addData("return", String.valueOf(ret));
+        TrajectoryActionBuilder tab2 = tab1.endTrajectory().fresh()
+                .strafeToSplineHeading(new Vector2d(56, -59),Math.toRadians(0));
+        logAndExecute( "Reversing and turning 180 degrees", () -> {
+            robot.frontSlideToPosition(0, 1.0, false);
+            Actions.runBlocking(new SequentialAction(tab2.build()));
+        });
+
+        // close claw
+        logAndExecute("close claw", () -> {
+            robot.miniClawServo.setPosition(robot.miniClawClosePos);
+            sleep(250); // Wait for 0.25 second
+            robot.frontSlideToPosition(17, 1.0, true);
+        });
+
+        // return to submersable
+        TrajectoryActionBuilder tab3 = tab2.endTrajectory().fresh()
+                .strafeToSplineHeading(new Vector2d(0, -35),Math.toRadians(180));
+        logAndExecute("Drive to sub", () -> {
+            Actions.runBlocking(new SequentialAction(tab3.build()));
+        });
+        logAndExecute("Hanging specimen", () -> {
+            robot.frontSlideToPosition(12, 0.8, true);
+            robot.miniClawServo.setPosition(robot.miniClawOpenPos);
+        });
+
+        /*/ Drive to submersible
+        TrajectoryActionBuilder tab4 = tab3.endTrajectory().fresh()
+                .strafeToSplineHeading(new Vector2d(0, -35),Math.toRadians(90));
+        logAndExecute("Third Human Load", () -> {
+
+        Actions.runBlocking(new SequentialAction(tab4.build()));
+
+            // Completion message
+            telemetry.addData("Step", "Autonomous Complete");
+            telemetry.update();
+        });
+
+         */
+    }
+    public void logAndExecute(String step, Runnable action) {
+        telemetry.addData("Step", step);
         telemetry.update();
-        sleep(99999999);
+        action.run();
     }
 }
