@@ -71,6 +71,17 @@ public class TestAuton extends LinearOpMode {
             telemetry.update();
         });
 
+         TrajectoryActionBuilder tab4 = tab3.endTrajectory().fresh()
+                .strafeToSplineHeading(new Vector2d(0, -35),Math.toRadians(90));
+        logAndExecute("Third Human Load", () -> {
+
+        Actions.runBlocking(new SequentialAction(tab4.build()));
+
+            // Completion message
+            telemetry.addData("Step", "Autonomous Complete");
+            telemetry.update();
+        });
+
          */
     }
     public void logAndExecute(String step, Runnable action) {
