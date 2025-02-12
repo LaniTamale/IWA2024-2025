@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -147,13 +148,13 @@ public class Main extends LinearOpMode {
 
             // wrist
             if (gamepad2.dpad_right) {
-                robot.wristServo.setPower(0.5);
+                robot.wristServo.setPosition(1);//135 deg
             }
             else if (gamepad2.dpad_left) {
-                robot.wristServo.setPower(-0.5);
+                robot.wristServo.setPosition(0);//-135 deg
             }
             else {
-                robot.wristServo.setPower(0);
+                robot.wristServo.setPosition(0.5);//0 deg
             }
 
             //show the elapsed game time and wheel power.
@@ -167,3 +168,27 @@ public class Main extends LinearOpMode {
         }
     }
 }
+
+/*
+            //Hard Stop Odometry wheels
+            public class OdometryWheelStop extends LinearOpMode {
+                private DcMotor OdometryWheelMotor;
+
+                @Override
+                public void init() {
+                    // Initialize the motor and gamepad1
+                    odometryWheelMotorY = hardwareMap.get(DcMotor.class, "odometryWheelMotorY");
+                    gamepad1 = gamepad1; // Assuming gamepad1 is used
+                    odometryWheelMotorX = hardwareMap.get(DcMotor.class, "odometryWheelMotorX");
+                    gamepad1 = gamepad1; // Assuming gamepad1 is used
+                }
+                @Override
+                public void loop() {
+                    // Check if the button (e.g., 'A' button) is pressed
+                    if (gamepad1.a) {
+                        // Hard stop the odometry wheel motor
+                        odometryWheelMotorY.setPower(0);
+                        odometryWheelMotorY.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                        odometryWheelMotorX.setPower(0);
+                        odometryWheelMotorX.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                */

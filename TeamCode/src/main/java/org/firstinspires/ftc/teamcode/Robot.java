@@ -46,6 +46,7 @@ public class Robot {
     public DcMotor rightFrontDrive;
     public DcMotor leftBackDrive;
     public DcMotor rightBackDrive;
+
     public DcMotor arm;
     public DcMotor armSlide;
     public DcMotor vertSlide;
@@ -54,7 +55,7 @@ public class Robot {
     public CRServo intakeServo1;
     public CRServo intakeServo2;
     public Servo miniClawServo;
-    public CRServo wristServo;
+    public Servo wristServo;
 
     public Robot(HardwareMap hardwareMap) {
         // init hardware
@@ -70,7 +71,7 @@ public class Robot {
         intakeServo1 = hardwareMap.get(CRServo.class, "intakeServo1");
         intakeServo2 = hardwareMap.get(CRServo.class, "intakeServo2");
         miniClawServo = hardwareMap.get(Servo.class, "miniClaw");
-        wristServo = hardwareMap.get(CRServo.class, "wristServo");
+        wristServo = hardwareMap.get(Servo.class, "wristServo");
 
         // configure drive motors
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -85,7 +86,7 @@ public class Robot {
         // Configure servos
         intakeServo1.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeServo2.setDirection(DcMotorSimple.Direction.REVERSE);
-        wristServo.setDirection(DcMotorSimple.Direction.FORWARD);
+        wristServo.setDirection(Servo.Direction.REVERSE);
 
         // Configure slides
         arm.setDirection(DcMotor.Direction.REVERSE);
@@ -202,7 +203,7 @@ public class Robot {
         }
     }
 
-    // Moves the front slide to a specified position (in inches).
+    // Moves the vertical slide to a specified position (in inches).
     // If blockReturn is true, the method will wait until movement is complete.
     // movement is relative; power is a float in the range [0.0, 1.0]
     // optionally block until movement completion

@@ -22,7 +22,7 @@ public class TestAuton extends LinearOpMode {
 
         waitForStart();
 
-        // Hang first preload
+        // Hang first preload Specamen
         logAndExecute("Raising front slide and toggling claw",
                 () -> robot.frontSlideToPosition(17, 1.0, false));
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
@@ -48,7 +48,7 @@ public class TestAuton extends LinearOpMode {
             robot.frontSlideToPosition(17, 1.0, true);
         });
 
-        // return to submersable
+        // return to submersible/ Second Specamen
         TrajectoryActionBuilder tab3 = tab2.endTrajectory().fresh()
                 .strafeToSplineHeading(new Vector2d(0, -35),Math.toRadians(180));
         logAndExecute("Drive to sub", () -> {
@@ -59,7 +59,7 @@ public class TestAuton extends LinearOpMode {
             robot.miniClawServo.setPosition(robot.miniClawOpenPos);
         });
 
-        /*/ Drive to submersible
+        /* Drive to submersible
         TrajectoryActionBuilder tab4 = tab3.endTrajectory().fresh()
                 .strafeToSplineHeading(new Vector2d(0, -35),Math.toRadians(90));
         logAndExecute("Third Human Load", () -> {
