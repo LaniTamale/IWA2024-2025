@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-
 @TeleOp(name = "TeleOp", group = "LinearOpMode")
 // TeleOp for claw bot with Mecanum drive
 public class Main extends LinearOpMode {
@@ -145,6 +144,7 @@ public class Main extends LinearOpMode {
             } else {
                 robot.miniClawServo.setPosition(robot.miniClawClosePos);
             }
+
 
             // wrist
             if (gamepad2.dpad_right) {
