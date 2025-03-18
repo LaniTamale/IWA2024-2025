@@ -25,7 +25,7 @@ public class PreLoadSamplesOpAuton extends LinearOpMode {
         //Step1: raise slide and lock miniClaw
         telemetry.addData("Step1", "Raising front slide and toggling claw");
         telemetry.update();
-        robot.frontSlideToPosition(18, 0.5, true);
+        robot.vertSlideToPosition(18, 0.5, true);
 
         //Step2: drive left
         telemetry.addData("Step2", "Driving left");
@@ -35,7 +35,7 @@ public class PreLoadSamplesOpAuton extends LinearOpMode {
         //Step3: Score the preload object
         telemetry.addData("Step3", "Hanging specimen");
         telemetry.update();
-        robot.frontSlideToPosition(12, 0.5, true);
+        robot.vertSlideToPosition(12, 0.5, true);
         robot.miniClawServo.setPosition(robot.miniClawOpenPos);
 
         //Step4: Drive Backward

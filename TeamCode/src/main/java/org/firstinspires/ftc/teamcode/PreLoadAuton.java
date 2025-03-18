@@ -24,7 +24,7 @@ public class PreLoadAuton extends LinearOpMode {
 
         // Raise slide and lock miniClaw
         logAndExecute("Raising front slide and toggling claw", () -> {
-            robot.frontSlideToPosition(18, 0.7, true);
+            robot.vertSlideToPosition(18, 0.7, true);
         });
 
         // Drive right
@@ -34,7 +34,7 @@ public class PreLoadAuton extends LinearOpMode {
 
         // Score the preload object
         logAndExecute("Hanging specimen", () -> {
-            robot.frontSlideToPosition(12, 0.7, true);
+            robot.vertSlideToPosition(12, 0.7, true);
             robot.miniClawServo.setPosition(robot.miniClawOpenPos);
         });
 

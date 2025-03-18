@@ -22,17 +22,18 @@ public class Robot {
     public boolean isMiniClawOpen;
     double cpr = 537.7; // clicks
     double wheelCirc = 11.9; // in
-    static final double frontSlideWheelCirc = Math.PI * 1.5;
+    static final double vertSlideWheelCirc = Math.PI * 1.5;
+
+    static final double armSlideWheelCirc = Math.PI * 1.5;
     // to correct movement lengths
     static final double drivetrainMultiplier =  1.5;
 
     // limits
-
-
     final public double miniClawOpenPos = 0.3;
     final public double miniClawClosePos = 0.0;
 
-    final public double frontSLideMaxLen = 18; // in
+    final public double vertSLideMaxLen = 18; // in
+    final public double armSLideMaxLen = 18; // in
 
     // state
     public boolean rightBumperPrev = false;
@@ -47,7 +48,8 @@ public class Robot {
     public DcMotor leftBackDrive;
     public DcMotor rightBackDrive;
 
-    public DcMotor arm;
+    public DcMotor arm1;
+    public DcMotor arm2;
     public DcMotor armSlide;
     public DcMotor vertSlide;
 
@@ -64,7 +66,8 @@ public class Robot {
         leftBackDrive = hardwareMap.get(DcMotor.class, "backLeft");
         rightBackDrive = hardwareMap.get(DcMotor.class, "backRight");
 
-        arm = hardwareMap.get(DcMotor.class, "arm");
+        arm1 = hardwareMap.get(DcMotor.class, "arm1");
+        arm2 = hardwareMap.get(DcMotor.class, "arm2");
         armSlide = hardwareMap.get(DcMotor.class, "armSlide");
         vertSlide = hardwareMap.get(DcMotor.class, "vertSlide");
 
@@ -89,11 +92,14 @@ public class Robot {
         wristServo.setDirection(Servo.Direction.REVERSE);
 
         // Configure slides
-        arm.setDirection(DcMotor.Direction.REVERSE);
-        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm1.setDirection(DcMotor.Direction.REVERSE);
+        arm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm2.setDirection(DcMotor.Direction.REVERSE);
+        arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         armSlide.setDirection(DcMotor.Direction.FORWARD);
         armSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         vertSlide.setDirection(DcMotor.Direction.REVERSE);
         vertSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -207,9 +213,9 @@ public class Robot {
     // If blockReturn is true, the method will wait until movement is complete.
     // movement is relative; power is a float in the range [0.0, 1.0]
     // optionally block until movement completion
-    public boolean frontSlideToPosition(double in, double power, boolean blockReturn) {
-        if (in > frontSLideMaxLen) return false;
-        double movementClicks = in / frontSlideWheelCirc * cpr;
+    public boolean vertSlideToPosition(double in, double power, boolean blockReturn) {
+        if (in > vertSLideMaxLen) return false;
+        double movementClicks = in / vertSlideWheelCirc * cpr;
 
         vertSlide.setTargetPosition((int)(movementClicks + 0.5));
         vertSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -217,6 +223,30 @@ public class Robot {
 
         if (!blockReturn) return true;
         while (vertSlide.isBusy()) {
+            try {
+                sleep(50);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+        return true;
+    }
+
+    // Moves the vertical slide to a specified position (in inches).
+    // If blockReturn is true, the method will wait until movement is complete.
+    // movement is relative; power is a float in the range [0.0, 1.0]
+    // optionally block until movement completion
+    public boolean armSlideToPosition(double in, double power, boolean blockReturn) {
+        if (in > armSLideMaxLen) return false;
+        double movementClicks = in / armSlideWheelCirc * cpr;
+
+        armSlide.setTargetPosition((int)(movementClicks + 0.5));
+        armSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armSlide.setPower(power);
+
+        if (!blockReturn) return true;
+        while (armSlide.isBusy()) {
             try {
                 sleep(50);
             } catch (InterruptedException e) {

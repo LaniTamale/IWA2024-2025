@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -35,21 +34,21 @@ public class Main extends LinearOpMode {
             //robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             double armPower = 0.5;
             if (gamepad2.dpad_up) { //was: dpad_up edit: reverted
-                robot.arm.setPower(-armPower);
+                robot.arm1.setPower(-armPower);
                 //robot.arm.setTargetPosition(robot.arm.getCurrentPosition()-10);
             } else if (gamepad2.dpad_down) { //was: dpad_down edit: reverted
-                robot.arm.setPower(armPower);
+                robot.arm1.setPower(armPower);
             } else {
-                robot.arm.setPower(0);
+                robot.arm1.setPower(0);
             }
             if (gamepad2.left_bumper) {
                 if (!armLocked) {
-                    robot.arm.setTargetPosition(robot.arm.getCurrentPosition());
-                    robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    robot.arm.setPower(1);
+                    robot.arm1.setTargetPosition(robot.arm1.getCurrentPosition());
+                    robot.arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    robot.arm1.setPower(1);
                     armLocked = true;
                 } else {
-                    robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.arm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     armLocked = false;
                 }
             }
@@ -163,7 +162,7 @@ public class Main extends LinearOpMode {
             telemetry.addData("Back left/Right", "%4.2f,%4.2f", leftBackPower, rightBackPower);
             //telemetry.addData("Wrist Pos", "%4.2f", wristServo.getPosition());
             telemetry.addData("Claw Power", "%4.2f", robot.intakeServo1.getPower());
-            telemetry.addData("robot.arm Pos", robot.arm.getCurrentPosition());
+            telemetry.addData("robot.arm Pos", robot.arm1.getCurrentPosition());
             telemetry.update();
         }
     }

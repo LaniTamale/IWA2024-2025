@@ -22,13 +22,13 @@ public class PreLoadSamplesAuton extends LinearOpMode {
 
         // Execute autonomous steps
         logAndExecute("Raising front slide and toggling claw",
-                () -> robot.frontSlideToPosition(17, 1.0, true));
+                () -> robot.vertSlideToPosition(17, 1.0, true));
 
         logAndExecute("Driving right",
                 () -> robot.driveToPosition(35, 0, 0.7, true));
 
         logAndExecute("Hanging specimen", () -> {
-            robot.frontSlideToPosition(12, 1.0, true);
+            robot.vertSlideToPosition(12, 1.0, true);
             robot.miniClawServo.setPosition(robot.miniClawOpenPos);
         });
 

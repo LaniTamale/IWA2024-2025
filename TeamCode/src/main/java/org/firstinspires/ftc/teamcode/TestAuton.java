@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
@@ -47,7 +46,6 @@ public class TestAuton extends LinearOpMode {
                 .strafeToSplineHeading(new Vector2d(35, -60), Math.toRadians(0));
         TrajectoryActionBuilder returnToSub1 = returnToSub0.endTrajectory().fresh()
                 .strafeToSplineHeading(new Vector2d(5,-32), Math.toRadians(180));
-
         //specimen score 1
         TrajectoryActionBuilder returnToSub2 = returnToSub1.endTrajectory().fresh()
                 .strafeToSplineHeading(new Vector2d(35, -60), Math.toRadians(0));
@@ -62,51 +60,50 @@ public class TestAuton extends LinearOpMode {
 
 
         logAndExecute("Deposit first pre load", () -> {
-            robot.frontSlideToPosition(17, 1.0, false);
+            robot.vertSlideToPosition(17, 1.0, false);
             Actions.runBlocking(new SequentialAction(moveToDropOff.build()));
-            robot.frontSlideToPosition(12, 1.0, true);
+            robot.vertSlideToPosition(12, 1.0, true);
             robot.miniClawServo.setPosition(robot.miniClawOpenPos);
-
         });
 
         logAndExecute("Push blocks", () -> Actions.runBlocking(new SequentialAction(moveToPickup.build())));
 
-
         logAndExecute("score deposit 1", () -> {
             robot.miniClawServo.setPosition(robot.miniClawClosePos);
-            robot.frontSlideToPosition(17, 1.0, false);
+            robot.vertSlideToPosition(17, 1.0, false);
             sleep(1000);
             Actions.runBlocking(new SequentialAction(returnToDropOff.build()));
-            robot.frontSlideToPosition(12, 1.0, false);
+            robot.vertSlideToPosition(12, 1.0, false);
             robot.miniClawServo.setPosition(robot.miniClawOpenPos);
         });
 
         logAndExecute("score deposit 2", () -> {
             Actions.runBlocking(new SequentialAction(returnToSub0.build()));
             robot.miniClawServo.setPosition(robot.miniClawClosePos);
-            robot.frontSlideToPosition(17, 1.0, false);
+            robot.vertSlideToPosition(17, 1.0, false);
             sleep(1000);
             Actions.runBlocking(new SequentialAction(returnToSub1.build()));
-            robot.frontSlideToPosition(12, 1.0, false);
+            robot.vertSlideToPosition(12, 1.0, false);
             robot.miniClawServo.setPosition(robot.miniClawOpenPos);
         });
 
         logAndExecute("score deposit 3", () -> {
             Actions.runBlocking(new SequentialAction(returnToSub2.build()));
             robot.miniClawServo.setPosition(robot.miniClawClosePos);
-            robot.frontSlideToPosition(17, 1.0, false);
+            robot.vertSlideToPosition(17, 1.0, false);
             sleep(1000);
             Actions.runBlocking(new SequentialAction(returnToSub3.build()));
-            robot.frontSlideToPosition(12, 1.0, false);
+            robot.vertSlideToPosition(12, 1.0, false);
             robot.miniClawServo.setPosition(robot.miniClawOpenPos);
         });
+
         logAndExecute("score deposit 4", () -> {
             Actions.runBlocking(new SequentialAction(returnToSub4.build()));
             robot.miniClawServo.setPosition(robot.miniClawClosePos);
-            robot.frontSlideToPosition(17, 1.0, false);
+            robot.vertSlideToPosition(17, 1.0, false);
             sleep(1000);
             Actions.runBlocking(new SequentialAction(returnToSub5.build()));
-            robot.frontSlideToPosition(12, 1.0, false);
+            robot.vertSlideToPosition(12, 1.0, false);
             robot.miniClawServo.setPosition(robot.miniClawOpenPos);
         });
 
