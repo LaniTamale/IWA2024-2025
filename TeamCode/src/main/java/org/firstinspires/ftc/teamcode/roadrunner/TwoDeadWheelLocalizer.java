@@ -40,7 +40,7 @@ public final class TwoDeadWheelLocalizer implements Localizer {
     private int lastParPos, lastPerpPos;
     private Rotation2d lastHeading;
 
-    private final double inPerTick;
+    private double inPerTick = 0.00764818;//24in (full floor tile)/ 3138ticks (ticks traveled)
 
     private double lastRawHeadingVel, headingVelOffset;
     private boolean initialized;

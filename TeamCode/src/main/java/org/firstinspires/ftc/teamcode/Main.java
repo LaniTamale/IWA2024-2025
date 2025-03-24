@@ -30,27 +30,20 @@ public class Main extends LinearOpMode {
             double lateral = gamepad1.left_stick_x;
             double yaw = gamepad1.right_stick_x;
 
-            //arm
+            //arm1 and arm2 for twerk
             //robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            double armPower = 0.5;
-            if (gamepad2.dpad_up) { //was: dpad_up edit: reverted
-                robot.arm1.setPower(-armPower);
+            double arm1Power = 1;
+            double arm2Power = 1;
+            if (gamepad2.dpad_down) { //was: dpad_up edit: reverted
+                robot.arm1.setPower(-arm1Power);
+                robot.arm2.setPower(-arm2Power);
                 //robot.arm.setTargetPosition(robot.arm.getCurrentPosition()-10);
-            } else if (gamepad2.dpad_down) { //was: dpad_down edit: reverted
-                robot.arm1.setPower(armPower);
+            } else if (gamepad2.dpad_up) { //was: dpad_down edit: reverted
+                robot.arm1.setPower(arm1Power);
+                robot.arm2.setPower(arm2Power);
             } else {
                 robot.arm1.setPower(0);
-            }
-            if (gamepad2.left_bumper) {
-                if (!armLocked) {
-                    robot.arm1.setTargetPosition(robot.arm1.getCurrentPosition());
-                    robot.arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    robot.arm1.setPower(1);
-                    armLocked = true;
-                } else {
-                    robot.arm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    armLocked = false;
-                }
+                robot.arm2.setPower(0);
             }
 
             // control back main linear slides
@@ -99,19 +92,6 @@ public class Main extends LinearOpMode {
             robot.leftBackDrive.setPower(leftBackPower);
             robot.rightBackDrive.setPower(rightBackPower);
 
-            /*
-            // Arm claw
-            if (gamepad2.right_trigger > 0.5 && !robot.rightTriggerPrev) {
-                robot.isArmClawOpen = !robot.isArmClawOpen;
-            }
-           robot.rightTriggerPrev = gamepad2.right_trigger > 0.5;
-            if (robot.isArmClawOpen) {
-                robot.armClawServo.setPosition(robot.ArmClawOpenPos);
-            } else {
-                robot.armClawServo.setPosition(robot.ArmClawClosePos);
-            }
-             */
-
             // Auto Intake
             // Example: Timed Intake Cycle (opens and closes every X seconds)
             //Timed cycle: Alternates between open and closed states at a set time interval.
@@ -143,7 +123,6 @@ public class Main extends LinearOpMode {
             } else {
                 robot.miniClawServo.setPosition(robot.miniClawClosePos);
             }
-
 
             // wrist
             if (gamepad2.dpad_right) {
@@ -190,4 +169,34 @@ public class Main extends LinearOpMode {
                         odometryWheelMotorY.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                         odometryWheelMotorX.setPower(0);
                         odometryWheelMotorX.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                */
+             */
+            /*
+            // Arm claw
+            if (gamepad2.right_trigger > 0.5 && !robot.rightTriggerPrev) {
+                robot.isArmClawOpen = !robot.isArmClawOpen;
+            }
+           robot.rightTriggerPrev = gamepad2.right_trigger > 0.5;
+            if (robot.isArmClawOpen) {
+                robot.armClawServo.setPosition(robot.ArmClawOpenPos);
+            } else {
+                robot.armClawServo.setPosition(robot.ArmClawClosePos);
+            }
+             */
+            /*
+            if (gamepad2.left_bumper) {
+                if (!armLocked) {
+                    robot.arm1.setTargetPosition(robot.arm1.getCurrentPosition());
+                    robot.arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    robot.arm1.setPower(1);
+                    robot.arm2.setTargetPosition(robot.arm2.getCurrentPosition());
+                    robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    robot.arm2.setPower(1);
+                   armLocked = true;
+                } else {
+                    robot.arm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    armLocked = false;
+                }
+            }
+            */
+

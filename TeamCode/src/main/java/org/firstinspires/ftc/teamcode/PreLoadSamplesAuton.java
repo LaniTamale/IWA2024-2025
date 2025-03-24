@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
+/*
 @Autonomous(name = "PreLoadSamplesAuton", group = "LinearOpMode")
 // Autonomous code to hang a specimen on the tall rung and push samples.
 public class PreLoadSamplesAuton extends LinearOpMode {
@@ -70,7 +70,8 @@ public class PreLoadSamplesAuton extends LinearOpMode {
             robot.driveToPosition(38, 0, 0.7, true);
             robot.driveToPosition(0, -5, 0.7, true);
             robot.driveToPosition(-38, 0, 0.7, true);
-        */
+        
 
     }
 }
+*/

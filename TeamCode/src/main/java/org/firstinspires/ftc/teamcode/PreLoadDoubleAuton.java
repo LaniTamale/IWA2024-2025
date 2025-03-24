@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
+/*
 @Autonomous(name = "PreLoadDoubleAuton", group = "LinearOpMode")
 // Autonomous code to hang a specimen on the tall rung and push samples.
 public class PreLoadDoubleAuton extends LinearOpMode {
@@ -24,23 +24,23 @@ public class PreLoadDoubleAuton extends LinearOpMode {
                 () -> robot.vertSlideToPosition(17, 1.0, true));
 
         logAndExecute("Driving right",
-                () -> robot.driveToPosition(35, 0, 0.8, true));
+        //        () -> robot.driveToPosition(35, 0, 0.8, true));
 
         logAndExecute("Hanging specimen", () -> {
             robot.vertSlideToPosition(12, 0.8, true);
-            robot.miniClawServo.setPosition(robot.miniClawOpenPos);
+            //robot.miniClawServo.setPosition(robot.miniClawOpenPos);
         });
 
         logAndExecute("Reversing and turning 180 degrees", () -> {
-            robot.driveToPosition(-18, 0, 0.8, true);
-            robot.vertSlideToPosition(0, 1.0, false);
-            robot.rotate(180, 0.5, true);
+         //   robot.driveToPosition(-18, 0, 0.8, true);
+         //   robot.vertSlideToPosition(0, 1.0, false);
+         //   robot.rotate(180, 0.5, true);
         });
 
         // Drive to wall
         logAndExecute("drive to wall", () -> {
-            robot.driveToPosition(0, 40, 0.5, true);
-            robot.driveToPosition(21, 0, 0.8, true);
+           // robot.driveToPosition(0, 40, 0.5, true);
+           // robot.driveToPosition(21, 0, 0.8, true);
         });
 
         // close claw
@@ -52,14 +52,14 @@ public class PreLoadDoubleAuton extends LinearOpMode {
 
         // return and spin
         logAndExecute("return and spin", () -> {
-            robot.driveToPosition(-15, 0, 0.9, true);
-            robot.driveToPosition(0, -42, 0.8, true);
-            robot.rotate(180, 0.5,true);
+           // robot.driveToPosition(-15, 0, 0.9, true);
+           // robot.driveToPosition(0, -42, 0.8, true);
+           // robot.rotate(180, 0.5,true);
         });
 
         // Drive to submersible
         logAndExecute("drive to submersible", () -> {
-            robot.driveToPosition(24, 0, 0.9, true);
+           // robot.driveToPosition(24, 0, 0.9, true);
             robot.vertSlideToPosition(12, 1.0, true);
             robot.miniClawServo.setPosition(robot.miniClawOpenPos);
 
@@ -78,3 +78,4 @@ public class PreLoadDoubleAuton extends LinearOpMode {
     public void doubleSpecimen(Robot robot) {
     }
 }
+*/

@@ -82,9 +82,10 @@ public class Robot {
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        // Configure encoders
+        /*// Configure encoders
         drivetrainSetRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drivetrainSetRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+         */
 
         // Configure servos
         intakeServo1.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -106,6 +107,7 @@ public class Robot {
         vertSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    /*
     public void drivetrainSetRunMode(DcMotor.RunMode mode) {
         leftFrontDrive.setMode(mode);
         rightFrontDrive.setMode(mode);
@@ -209,6 +211,54 @@ public class Robot {
         }
     }
 
+    // degrees is used for familiarity
+    // positive power for clockwise, negative for counterclockwise
+    public void rotate(double degrees, double power, boolean blockReturn) {
+
+        // Reset encoders to ensure accurate movement
+        drivetrainSetRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Determine encoder target position for turn
+        // Turning Mecanum drive is normal tank tread movement
+        // drivetrain circumference / wheel circumference = number of rotations
+        // num rotations * cpr = clicks for a full circle
+        // clicks per circle * (fraction of a whole circle as [degrees / 360]) = clicks for movement
+        // clicks for movement * scale factor = adjusted clicks
+        int turnClicks = (int) (((Math.PI * drivetrainDiagonal) / wheelCirc) * cpr * (degrees / 360) * drivetrainMultiplier);
+
+        // Set target positions for a 180-degree turn
+        //Instead of moving motors in a linear direction (x, y), function makes the left side move forward and the right side move backward
+        leftFrontDrive.setTargetPosition(turnClicks);
+        leftBackDrive.setTargetPosition(turnClicks);
+        rightFrontDrive.setTargetPosition(-turnClicks);
+        rightBackDrive.setTargetPosition(-turnClicks);
+
+        // Enable encoder distance-based movement
+        drivetrainSetRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Set motor power for rotation
+        //ensures that both sides rotate at the same speed
+        leftFrontDrive.setPower(power);
+        leftBackDrive.setPower(power);
+        rightFrontDrive.setPower(power);
+        rightBackDrive.setPower(power);
+
+        // Block until movement is complete if required
+        if (!blockReturn) return;
+
+        //ensures the robot fully completes the turn before continuing
+        while (leftFrontDrive.isBusy() || rightFrontDrive.isBusy() ||
+                leftBackDrive.isBusy() || rightBackDrive.isBusy()) {
+            try {
+                Thread.sleep(50); // Wait briefly before checking again
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+    }
+    */
+
     // Moves the vertical slide to a specified position (in inches).
     // If blockReturn is true, the method will wait until movement is complete.
     // movement is relative; power is a float in the range [0.0, 1.0]
@@ -253,54 +303,6 @@ public class Robot {
                 Thread.currentThread().interrupt();
                 break;
             }
-        }
-        return true;
-    }
-
-    // degrees is used for familiarity
-    // positive power for clockwise, negative for counterclockwise
-    public void rotate(double degrees, double power, boolean blockReturn) {
-
-        // Reset encoders to ensure accurate movement
-        drivetrainSetRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        // Determine encoder target position for turn
-        // Turning Mecanum drive is normal tank tread movement
-        // drivetrain circumference / wheel circumference = number of rotations
-        // num rotations * cpr = clicks for a full circle
-        // clicks per circle * (fraction of a whole circle as [degrees / 360]) = clicks for movement
-        // clicks for movement * scale factor = adjusted clicks
-        int turnClicks = (int) (((Math.PI * drivetrainDiagonal) / wheelCirc) * cpr * (degrees / 360) * drivetrainMultiplier);
-
-        // Set target positions for a 180-degree turn
-        //Instead of moving motors in a linear direction (x, y), function makes the left side move forward and the right side move backward
-        leftFrontDrive.setTargetPosition(turnClicks);
-        leftBackDrive.setTargetPosition(turnClicks);
-        rightFrontDrive.setTargetPosition(-turnClicks);
-        rightBackDrive.setTargetPosition(-turnClicks);
-
-        // Enable encoder distance-based movement
-        drivetrainSetRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        // Set motor power for rotation
-        //ensures that both sides rotate at the same speed
-        leftFrontDrive.setPower(power);
-        leftBackDrive.setPower(power);
-        rightFrontDrive.setPower(power);
-        rightBackDrive.setPower(power);
-
-        // Block until movement is complete if required
-        if (!blockReturn) return;
-
-        //ensures the robot fully completes the turn before continuing
-        while (leftFrontDrive.isBusy() || rightFrontDrive.isBusy() ||
-                        leftBackDrive.isBusy() || rightBackDrive.isBusy()) {
-            try {
-                Thread.sleep(50); // Wait briefly before checking again
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                break;
-            }
-        }
+        } return true;
     }
 }

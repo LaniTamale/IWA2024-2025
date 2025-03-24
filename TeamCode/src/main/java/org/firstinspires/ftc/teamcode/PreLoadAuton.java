@@ -29,7 +29,7 @@ public class PreLoadAuton extends LinearOpMode {
 
         // Drive right
         logAndExecute("Driving right", () -> {
-            robot.driveToPosition(35, 0, 1.0, true);
+            //robot.driveToPosition(35, 0, 1.0, true);
         });
 
         // Score the preload object
@@ -40,8 +40,8 @@ public class PreLoadAuton extends LinearOpMode {
 
         // Park
         logAndExecute("Parking", () -> {
-            robot.driveToPosition(-28, 0, 1.0, true);
-            robot.driveToPosition(0, -44, 1.0, true);
+            //robot.driveToPosition(-28, 0, 1.0, true);
+            //robot.driveToPosition(0, -44, 1.0, true);
         });
 
         // Completion message

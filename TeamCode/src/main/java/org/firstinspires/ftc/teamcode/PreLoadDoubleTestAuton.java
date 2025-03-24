@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
+/*
 @Autonomous(name = "PreLoadDoubleTestAuton", group = "LinearOpMode")
 // Autonomous code to hang a specimen on the tall rung and push samples.
 public class PreLoadDoubleTestAuton extends LinearOpMode {
@@ -83,3 +83,4 @@ public class PreLoadDoubleTestAuton extends LinearOpMode {
     public void doubleSpecimen(Robot robot) {
     }
 }
+*/
