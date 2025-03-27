@@ -49,12 +49,6 @@ public class MeepMeepTesting {
                 .strafeToSplineHeading(new Vector2d(35, -60), Math.toRadians(0))
                 .strafeToSplineHeading(new Vector2d(5,-32), Math.toRadians(180))
 
-
-
-
-
-
-
                 .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
