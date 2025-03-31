@@ -34,7 +34,7 @@ public class ParkAutonRR extends LinearOpMode {
         telemetry.update();
 
         TrajectoryActionBuilder moveToDropOff = drive.actionBuilder(initialPose)
-                .strafeTo(new Vector2d(60, -55));
+                .strafeTo(new Vector2d(38, -55));
 
         // Execute the trajectory
         Actions.runBlocking(moveToDropOff.build());
