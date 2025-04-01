@@ -10,9 +10,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 
-@Autonomous(name="TestAutonRR", group="LinearOpMode")
+@Autonomous(name="SpecimenAuton", group="LinearOpMode")
 // test autonomous code
-public class TestAutonRR extends LinearOpMode {
+public class SpecimenAuton extends LinearOpMode {
     public void runOpMode() {
         Robot robot = new Robot(hardwareMap);
         Pose2d initialPose = new Pose2d(12, -60, Math.toRadians(180));
@@ -22,10 +22,10 @@ public class TestAutonRR extends LinearOpMode {
         waitForStart();
         // Move to score first specimen
         TrajectoryActionBuilder moveToDropOff = drive.actionBuilder(initialPose)
-                .strafeTo(new Vector2d(2, -48));
+                .strafeTo(new Vector2d(0, -28));
         // Push Block to drop off
         TrajectoryActionBuilder moveToPickup = moveToDropOff.endTrajectory().fresh()
-                .strafeTo(new Vector2d(23, -48))
+                .strafeTo(new Vector2d(23, -42))
                 //Samples 1
                 .strafeToSplineHeading(new Vector2d(45, -12), Math.toRadians(0))
                 .strafeToSplineHeading(new Vector2d(45, -53), Math.toRadians(0))

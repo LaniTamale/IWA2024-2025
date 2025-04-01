@@ -22,8 +22,8 @@ public class MeepMeepTesting {
 
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(12, -60, Math.toRadians(180)))
-                .strafeTo(new Vector2d(0, -32))
-                .strafeTo(new Vector2d(23, -32))
+                .strafeTo(new Vector2d(0, -28))
+                .strafeTo(new Vector2d(23, -42))
 
                 //Samples 1
                 .strafeToSplineHeading(new Vector2d(45, -12), Math.toRadians(0))

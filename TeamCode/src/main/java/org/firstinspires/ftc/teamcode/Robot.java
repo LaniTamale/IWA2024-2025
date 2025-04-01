@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import java.lang.Math;
-import static java.lang.Thread.sleep;
 
 /*
 Contains robot build, state, and transformation functions.
@@ -32,7 +32,7 @@ public class Robot {
     final public double miniClawOpenPos = 0.3;
     final public double miniClawClosePos = 0.0;
 
-    final public double vertSLideMaxLen = 18; // in
+    final public double vertSLideMaxLen = 19.15; // in
     final public double armSLideMaxLen = 18; // in
 
     // state
@@ -107,6 +107,70 @@ public class Robot {
         vertSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    // Moves the vertical slide to a specified position (in inches).
+    // If blockReturn is true, the method will wait until movement is complete.
+    // Movement is relative; power is a float in the range [0.0, 1.0].
+    public boolean vertSlideToPosition(double in, double power, boolean blockReturn) {
+
+        // Check if the requested movement exceeds the slide's maximum length.
+        // If it does, return false and do not move the slide.
+        if (in > vertSLideMaxLen) return false;
+
+        // Convert inches to encoder counts.
+        // The calculation uses the wheel circumference and encoder counts per revolution (cpr).
+        double movementClicks = in / vertSlideWheelCirc * cpr;
+
+        // Set the target position for the motor (rounded to the nearest integer).
+        vertSlide.setTargetPosition((int)(movementClicks + 0.5));
+
+        // Set the motor to run automatically to the target position.
+        vertSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Set the motor power (speed) to the given value.
+        vertSlide.setPower(power);
+
+        // If blockReturn is false, return immediately and let the movement continue in the background.
+        if (!blockReturn) return true;
+
+        // If blockReturn is true, wait until the motor reaches its target.
+        while (vertSlide.isBusy()) {  // Keep looping while the motor is still moving.
+            try {
+                sleep(50);  // Pause for 50ms before checking again.
+            } catch (InterruptedException e) {
+                // If the thread is interrupted, restore its interrupted state and exit the loop.
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+
+        // Return true to indicate the slide has reached the target position.
+        return true;
+    }
+
+
+    // Moves the arm slide to a specified position (in inches).
+    // If blockReturn is true, the method will wait until movement is complete.
+    // movement is relative; power is a float in the range [0.0, 1.0]
+    // optionally block until movement completion
+    public boolean armSlideToPosition(double in, double power, boolean blockReturn) {
+        if (in > armSLideMaxLen) return false;
+        double movementClicks = in / armSlideWheelCirc * cpr;
+
+        armSlide.setTargetPosition((int)(movementClicks + 0.5));
+        armSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armSlide.setPower(power);
+
+        if (!blockReturn) return true;
+        while (armSlide.isBusy()) {
+            try {
+                sleep(50);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        } return true;
+    }
+}
     /*
     public void drivetrainSetRunMode(DcMotor.RunMode mode) {
         leftFrontDrive.setMode(mode);
@@ -258,51 +322,3 @@ public class Robot {
         }
     }
     */
-
-    // Moves the vertical slide to a specified position (in inches).
-    // If blockReturn is true, the method will wait until movement is complete.
-    // movement is relative; power is a float in the range [0.0, 1.0]
-    // optionally block until movement completion
-    public boolean vertSlideToPosition(double in, double power, boolean blockReturn) {
-        if (in > vertSLideMaxLen) return false;
-        double movementClicks = in / vertSlideWheelCirc * cpr;
-
-        vertSlide.setTargetPosition((int)(movementClicks + 0.5));
-        vertSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        vertSlide.setPower(power);
-
-        if (!blockReturn) return true;
-        while (vertSlide.isBusy()) {
-            try {
-                sleep(50);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                break;
-            }
-        }
-        return true;
-    }
-
-    // Moves the vertical slide to a specified position (in inches).
-    // If blockReturn is true, the method will wait until movement is complete.
-    // movement is relative; power is a float in the range [0.0, 1.0]
-    // optionally block until movement completion
-    public boolean armSlideToPosition(double in, double power, boolean blockReturn) {
-        if (in > armSLideMaxLen) return false;
-        double movementClicks = in / armSlideWheelCirc * cpr;
-
-        armSlide.setTargetPosition((int)(movementClicks + 0.5));
-        armSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armSlide.setPower(power);
-
-        if (!blockReturn) return true;
-        while (armSlide.isBusy()) {
-            try {
-                sleep(50);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                break;
-            }
-        } return true;
-    }
-}
