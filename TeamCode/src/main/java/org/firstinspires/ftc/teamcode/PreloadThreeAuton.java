@@ -22,7 +22,7 @@ public class PreloadThreeAuton extends LinearOpMode {
         waitForStart();
         // Move to score pre loaded first specimen
         TrajectoryActionBuilder moveToDropOff = drive.actionBuilder(initialPose)
-                .strafeTo(new Vector2d(0, -28));
+                .strafeTo(new Vector2d(-1, -28));
 
 
         // Move to observation for first human
@@ -33,22 +33,22 @@ public class PreloadThreeAuton extends LinearOpMode {
         //Scoring Obseravtion specimen
         TrajectoryActionBuilder returnToSub0 = moveToPickup.endTrajectory().fresh()
 		// add or subtract small rotation to force a direction
-                .strafeToSplineHeading(new Vector2d(0, -26), Math.toRadians(180));
+                .strafeToSplineHeading(new Vector2d(2, -28), Math.toRadians(180));
         //Travel around sub to Samples 1
         TrajectoryActionBuilder returnToSub1 = returnToSub0.endTrajectory().fresh()
                 .strafeToSplineHeading(new Vector2d(29   ,-40), Math.toRadians(0));
         //Travel behind Samples 1
         TrajectoryActionBuilder returnToSub2 = returnToSub1.endTrajectory().fresh()
                 .strafeToSplineHeading(new Vector2d(43, 0), Math.toRadians(0));
-        //Push Sample 1 to observation
-        TrajectoryActionBuilder returnToSub3 = returnToSub2.endTrajectory().fresh()
-                .strafeToSplineHeading(new Vector2d(43,-60), Math.toRadians(0));
         //Stop for human to prep sample
+        TrajectoryActionBuilder returnToSub3 = returnToSub2.endTrajectory().fresh()
+                .strafeToSplineHeading(new Vector2d(43,-52), Math.toRadians(0));
+        //Sample 1 to observation
         TrajectoryActionBuilder returnToSub4 = returnToSub3.endTrajectory().fresh()
-                .strafeToSplineHeading(new Vector2d(43,-60), Math.toRadians(0));
-        //Scoring specimen sample 2
+                .strafeToSplineHeading(new Vector2d(43,-61), Math.toRadians(0));
+        //Scoring specimen sample 1
         TrajectoryActionBuilder returnToSub5 = returnToSub4.endTrajectory().fresh()
-                .strafeToSplineHeading(new Vector2d(0,-24), Math.toRadians(180));
+                .strafeToSplineHeading(new Vector2d(4,-28), Math.toRadians(180));
         //Parking
         TrajectoryActionBuilder returnToSub6 = returnToSub5.endTrajectory().fresh()
                 .strafeToSplineHeading(new Vector2d(43,-60), Math.toRadians(0));
@@ -72,17 +72,18 @@ public class PreloadThreeAuton extends LinearOpMode {
             robot.miniClawServo.setPosition(robot.miniClawOpenPos);
         });
 
-        logAndExecute("Pushing Samples", () -> {
+        logAndExecute("Pushing Sample and Pause", () -> {
             Actions.runBlocking(new SequentialAction(returnToSub1.build()));
             Actions.runBlocking(new SequentialAction(returnToSub2.build()));
             Actions.runBlocking(new SequentialAction(returnToSub3.build()));
+            sleep(3000);
             Actions.runBlocking(new SequentialAction(returnToSub4.build()));
             robot.vertSlideToPosition(0, 1.0, false);
             sleep(1000);
             robot.miniClawServo.setPosition(robot.miniClawClosePos);
         });
 
-        logAndExecute("Score Sample 2", () -> {
+        logAndExecute("Score Sample 1", () -> {
             robot.vertSlideToPosition(17, 1.0, false);
             Actions.runBlocking(new SequentialAction(returnToSub5.build()));
             robot.vertSlideToPosition(11, 1.0, false);

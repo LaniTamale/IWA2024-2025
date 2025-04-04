@@ -23,30 +23,25 @@ public class MeepMeepTesting {
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(12, -60, Math.toRadians(180)))
                 //Score PreLoaded
-                         .strafeTo(new Vector2d(0, -28))
+                         .strafeTo(new Vector2d(-1, -28))
                 //Scoring Obseravtion specimen
                 // Move to observation for first human
                 // First move to the pickup point
                         .strafeToSplineHeading(new Vector2d(40, -61), Math.toRadians(0))
                         // add or subtract small rotation to force a direction
-                        .strafeToSplineHeading(new Vector2d(-2, -28), Math.toRadians(180))
+                        .strafeToSplineHeading(new Vector2d(2, -28), Math.toRadians(180))
                 //Travel around sub to Samples 1
                         .strafeToSplineHeading(new Vector2d(29   ,-40), Math.toRadians(0))
                 //Travel behind Samples 1
-                        .strafeToSplineHeading(new Vector2d(43, 0), Math.toRadians(0))
-                //Push Sample 1 to observation
-                        .strafeToSplineHeading(new Vector2d(43,-60), Math.toRadians(0))
-                //Travel behind samples 2
-                        .strafeToSplineHeading(new Vector2d(50, 0), Math.toRadians(0))
-                //Push Sample 2 to observation
-                        .strafeToSplineHeading(new Vector2d(57, -60), Math.toRadians(0))
-                //Sample 2 to observation for human load
-                        .strafeToSplineHeading(new Vector2d(44, -61), Math.toRadians(0))
-                //Scoring specimen sample 2
-                        .strafeToSplineHeading(new Vector2d(-4,-28), Math.toRadians(180))
+                        .strafeToSplineHeading(new Vector2d(45, 0), Math.toRadians(0))
+                //Stop for human to prep sample
+                        .strafeToSplineHeading(new Vector2d(45,-52), Math.toRadians(0))
+                //Sample 1 to observation for human load
+                        .strafeToSplineHeading(new Vector2d(45, -61), Math.toRadians(0))
+                //Scoring specimen sample 1
+                        .strafeToSplineHeading(new Vector2d(4,-28), Math.toRadians(180))
                 //Parking
                         .strafeToSplineHeading(new Vector2d(43,-60), Math.toRadians(0))
-
                 .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
