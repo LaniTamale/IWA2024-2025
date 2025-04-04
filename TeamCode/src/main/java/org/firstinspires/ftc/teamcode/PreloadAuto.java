@@ -28,18 +28,15 @@ public class PreloadAuto extends LinearOpMode {
         // Move to observation for first human
         // First move to the pickup point
         TrajectoryActionBuilder moveToPickup = moveToDropOff.endTrajectory().fresh()
-                .strafeTo(new Vector2d(40, -60));
-        // Then rotate separately
-        TrajectoryActionBuilder rotate180 = moveToPickup.endTrajectory().fresh()
-                .turn(Math.toRadians(181)); // 179 or 181
-
+                .strafeToSplineHeading(new Vector2d(40, -60), Math.toRadians(0));
 
         //Scoring Obseravtion specimen
         TrajectoryActionBuilder returnToSub0 = moveToPickup.endTrajectory().fresh()
+		// add or subtract small rotation to force a direction
                 .strafeToSplineHeading(new Vector2d(0, -28), Math.toRadians(180));
         //Travel around sub to Samples 1
         TrajectoryActionBuilder returnToSub1 = returnToSub0.endTrajectory().fresh()
-                .strafeToSplineHeading(new Vector2d(25,-40), Math.toRadians(180));
+                .strafeToSplineHeading(new Vector2d(25,-40), Math.toRadians(0));
         //Travel behind Samples 1
         TrajectoryActionBuilder returnToSub2 = returnToSub1.endTrajectory().fresh()
                 .strafeToSplineHeading(new Vector2d(43, 0), Math.toRadians(0));
@@ -57,7 +54,7 @@ public class PreloadAuto extends LinearOpMode {
                 .strafeToSplineHeading(new Vector2d(0,-28), Math.toRadians(180));
         //Parking
         TrajectoryActionBuilder returnToSub7 = returnToSub6.endTrajectory().fresh()
-                .strafeToSplineHeading(new Vector2d(43,-60), Math.toRadians(180));
+                .strafeToSplineHeading(new Vector2d(43,-60), Math.toRadians(0));
 
 
         logAndExecute("Score Preload", () -> {
@@ -65,7 +62,6 @@ public class PreloadAuto extends LinearOpMode {
             Actions.runBlocking(new SequentialAction(moveToDropOff.build()));
             robot.vertSlideToPosition(11, 1.0, true);
             robot.miniClawServo.setPosition(robot.miniClawOpenPos);
-            sleep(250);
             Actions.runBlocking(new SequentialAction(moveToPickup.build()));
             robot.vertSlideToPosition(0, 1.0, true);
             sleep(1000);
