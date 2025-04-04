@@ -10,9 +10,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 
-@Autonomous(name="SpecimenAuton", group="LinearOpMode")
+@Autonomous(name="SpecimenFiveAuton", group="LinearOpMode")
 // test autonomous code
-public class SpecimenAuton extends LinearOpMode {
+public class SpecimenFiveAuton extends LinearOpMode {
     public void runOpMode() {
         Robot robot = new Robot(hardwareMap);
         Pose2d initialPose = new Pose2d(12, -60, Math.toRadians(180));

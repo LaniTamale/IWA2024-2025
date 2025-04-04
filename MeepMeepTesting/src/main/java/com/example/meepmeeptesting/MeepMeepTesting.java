@@ -1,6 +1,7 @@
 package com.example.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
@@ -22,31 +23,29 @@ public class MeepMeepTesting {
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(12, -60, Math.toRadians(180)))
                 //Score PreLoaded
-                .strafeTo(new Vector2d(0, -28))
-
-                //back to pick up Obseravtion specimen
-                .strafeToSplineHeading(new Vector2d(40, -60),Math.toRadians(0))
-
+                         .strafeTo(new Vector2d(0, -28))
                 //Scoring Obseravtion specimen
-                .strafeToSplineHeading(new Vector2d(0,-28), Math.toRadians(180))
-
+                // Move to observation for first human
+                // First move to the pickup point
+                        .strafeToSplineHeading(new Vector2d(40, -61), Math.toRadians(0))
+                        // add or subtract small rotation to force a direction
+                        .strafeToSplineHeading(new Vector2d(-2, -28), Math.toRadians(180))
                 //Travel around sub to Samples 1
-                .strafeToSplineHeading(new Vector2d(25, -40), Math.toRadians(0))
-
+                        .strafeToSplineHeading(new Vector2d(29   ,-40), Math.toRadians(0))
                 //Travel behind Samples 1
-                .strafeToSplineHeading(new Vector2d(41, 0), Math.toRadians(0))
-
+                        .strafeToSplineHeading(new Vector2d(43, 0), Math.toRadians(0))
                 //Push Sample 1 to observation
-                .strafeToSplineHeading(new Vector2d(41, -60), Math.toRadians(0))
-
+                        .strafeToSplineHeading(new Vector2d(43,-60), Math.toRadians(0))
                 //Travel behind samples 2
-                .strafeToSplineHeading(new Vector2d(50, 0), Math.toRadians(0))
-
+                        .strafeToSplineHeading(new Vector2d(50, 0), Math.toRadians(0))
                 //Push Sample 2 to observation
-                .strafeToSplineHeading(new Vector2d(50, -60), Math.toRadians(0))
-
+                        .strafeToSplineHeading(new Vector2d(57, -60), Math.toRadians(0))
+                //Sample 2 to observation for human load
+                        .strafeToSplineHeading(new Vector2d(44, -61), Math.toRadians(0))
                 //Scoring specimen sample 2
-                .strafeToSplineHeading(new Vector2d(0,-28), Math.toRadians(180))
+                        .strafeToSplineHeading(new Vector2d(-4,-28), Math.toRadians(180))
+                //Parking
+                        .strafeToSplineHeading(new Vector2d(43,-60), Math.toRadians(0))
 
                 .build());
 
