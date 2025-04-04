@@ -110,7 +110,6 @@ public class SpecimenAuton extends LinearOpMode {
         telemetry.addData("Status", "Autonomous Complete");
         telemetry.update();
     }
-
     public void logAndExecute(String step, Runnable action) {
         telemetry.addData("Step", step);
         telemetry.update();

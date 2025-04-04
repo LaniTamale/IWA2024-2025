@@ -105,7 +105,7 @@ public class Main extends LinearOpMode {
             if (gamepad2.right_trigger > 0) {
                 robot.intakeServo1.setPower(gamepad2.right_trigger);
                 robot.intakeServo2.setPower(gamepad2.right_trigger);
-            } else if (gamepad2.left_trigger > 0){
+            } else if (gamepad2.left_trigger > 0.5){
                 robot.intakeServo1.setPower(-gamepad2.left_trigger);
                 robot.intakeServo2.setPower(-gamepad2.left_trigger);
             }
