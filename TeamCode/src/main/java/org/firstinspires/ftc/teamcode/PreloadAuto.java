@@ -23,9 +23,17 @@ public class PreloadAuto extends LinearOpMode {
         // Move to score pre loaded first specimen
         TrajectoryActionBuilder moveToDropOff = drive.actionBuilder(initialPose)
                 .strafeTo(new Vector2d(0, -28));
+
+
         // Move to observation for first human
+        // First move to the pickup point
         TrajectoryActionBuilder moveToPickup = moveToDropOff.endTrajectory().fresh()
-                .strafeToSplineHeading(new Vector2d(40, -60),Math.toRadians(-180));
+                .strafeTo(new Vector2d(40, -60));
+        // Then rotate separately
+        TrajectoryActionBuilder rotate180 = moveToPickup.endTrajectory().fresh()
+                .turn(Math.toRadians(181)); // 179 or 181
+
+
         //Scoring Obseravtion specimen
         TrajectoryActionBuilder returnToSub0 = moveToPickup.endTrajectory().fresh()
                 .strafeToSplineHeading(new Vector2d(0, -28), Math.toRadians(180));
@@ -47,6 +55,9 @@ public class PreloadAuto extends LinearOpMode {
         //Scoring specimen sample 2
         TrajectoryActionBuilder returnToSub6 = returnToSub5.endTrajectory().fresh()
                 .strafeToSplineHeading(new Vector2d(0,-28), Math.toRadians(180));
+        //Parking
+        TrajectoryActionBuilder returnToSub7 = returnToSub6.endTrajectory().fresh()
+                .strafeToSplineHeading(new Vector2d(43,-60), Math.toRadians(180));
 
 
         logAndExecute("Score Preload", () -> {
@@ -84,6 +95,10 @@ public class PreloadAuto extends LinearOpMode {
             Actions.runBlocking(new SequentialAction(returnToSub6.build()));
             robot.vertSlideToPosition(11, 1.0, false);
             robot.miniClawServo.setPosition(robot.miniClawOpenPos);
+        });
+
+        logAndExecute("Parking", () -> {
+            Actions.runBlocking(new SequentialAction(returnToSub7.build()));
         });
 
         telemetry.addData("Status", "Autonomous Complete");
