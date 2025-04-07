@@ -43,21 +43,24 @@ public class PreloadThreeAuton extends LinearOpMode {
         //Stop for human to prep sample
         TrajectoryActionBuilder returnToSub3 = returnToSub2.endTrajectory().fresh()
                 .strafeToSplineHeading(new Vector2d(43,-52), Math.toRadians(0));
-        //Sample 1 to observation
+        //Retreat Sample 1 to observation
         TrajectoryActionBuilder returnToSub4 = returnToSub3.endTrajectory().fresh()
+                .strafeToSplineHeading(new Vector2d(43,-48), Math.toRadians(0));
+        //Sample 1 to observation for human
+        TrajectoryActionBuilder returnToSub5 = returnToSub4.endTrajectory().fresh()
                 .strafeToSplineHeading(new Vector2d(43,-61), Math.toRadians(0));
         //Scoring specimen sample 1
-        TrajectoryActionBuilder returnToSub5 = returnToSub4.endTrajectory().fresh()
-                .strafeToSplineHeading(new Vector2d(4,-28), Math.toRadians(180));
-        //Parking
         TrajectoryActionBuilder returnToSub6 = returnToSub5.endTrajectory().fresh()
+                .strafeToSplineHeading(new Vector2d(3,-28), Math.toRadians(180));
+        //Parking
+        TrajectoryActionBuilder returnToSub7 = returnToSub6.endTrajectory().fresh()
                 .strafeToSplineHeading(new Vector2d(43,-60), Math.toRadians(0));
 
 
         logAndExecute("Score Preload", () -> {
             robot.vertSlideToPosition(17, 1.0, false);
             Actions.runBlocking(new SequentialAction(moveToDropOff.build()));
-            robot.vertSlideToPosition(11, 1.0, true);
+            robot.vertSlideToPosition(12, 1.0, true);
             robot.miniClawServo.setPosition(robot.miniClawOpenPos);
             Actions.runBlocking(new SequentialAction(moveToPickup.build()));
             robot.vertSlideToPosition(0, 1.0, true);
@@ -68,16 +71,18 @@ public class PreloadThreeAuton extends LinearOpMode {
         logAndExecute("Score Observation Specimen", () -> {
             robot.vertSlideToPosition(17, 1.0, false);
             Actions.runBlocking(new SequentialAction(returnToSub0.build()));
-            robot.vertSlideToPosition(10, 1.0, false);
+            robot.vertSlideToPosition(12, 1.0, false);
+            sleep(500);
             robot.miniClawServo.setPosition(robot.miniClawOpenPos);
         });
 
-        logAndExecute("Pushing Sample and Pause", () -> {
+        logAndExecute("Pushing Sample 1 and Pause/Retreat", () -> {
             Actions.runBlocking(new SequentialAction(returnToSub1.build()));
             Actions.runBlocking(new SequentialAction(returnToSub2.build()));
             Actions.runBlocking(new SequentialAction(returnToSub3.build()));
-            sleep(3000);
             Actions.runBlocking(new SequentialAction(returnToSub4.build()));
+            sleep(2500);
+            Actions.runBlocking(new SequentialAction(returnToSub5.build()));
             robot.vertSlideToPosition(0, 1.0, false);
             sleep(1000);
             robot.miniClawServo.setPosition(robot.miniClawClosePos);
@@ -85,13 +90,14 @@ public class PreloadThreeAuton extends LinearOpMode {
 
         logAndExecute("Score Sample 1", () -> {
             robot.vertSlideToPosition(17, 1.0, false);
-            Actions.runBlocking(new SequentialAction(returnToSub5.build()));
-            robot.vertSlideToPosition(11, 1.0, false);
+            Actions.runBlocking(new SequentialAction(returnToSub6.build()));
+            robot.vertSlideToPosition(12, 1.0, false);
+            sleep(500);
             robot.miniClawServo.setPosition(robot.miniClawOpenPos);
         });
 
         logAndExecute("Parking", () -> {
-            Actions.runBlocking(new SequentialAction(returnToSub6.build()));
+            Actions.runBlocking(new SequentialAction(returnToSub7.build()));
         });
 
         telemetry.addData("Status", "Autonomous Complete");
